@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+body{
+  background: linear-gradient(45deg, rgb(5, 7, 37) 0%, rgb(17, 40, 85) 50%, rgb(24, 93, 240) 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.redR{ background: linear-gradient(135deg, #4e0101 0%, #741414 50%, #af1212 100%);
+    border:5px solid rgb(85, 7, 7);}
+.blueR{background: linear-gradient(135deg, #09205e 0%, #0c2c5e 50%, #1d4ed8 100%);
+    border:5px solid rgb(14, 3, 109);}
+.greenR{background: linear-gradient(135deg, #033f1a 0%, #048332 50%, #15803d 100%);
+    border:5px solid rgb(0, 46, 18);}
+
+
