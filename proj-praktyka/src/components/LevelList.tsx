@@ -1,12 +1,11 @@
-
-interface ColorProps{
+interface LevelListProps{
   activeElement: string;
   inActiveElement: string
   onLevelChange: (level: string) => void;
   currentLevel: string;
 }
 
-export const LevelList = ({activeElement, inActiveElement, onLevelChange, currentLevel}:ColorProps) => {
+export const LevelList = ({activeElement, inActiveElement, onLevelChange, currentLevel}:LevelListProps) => {
   const Level = ["1-Back (podstawowy)", "2-Back (średni)", "3-Back (zaawansowany)"];
 
   return(

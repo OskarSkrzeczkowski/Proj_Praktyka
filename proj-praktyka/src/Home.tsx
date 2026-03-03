@@ -1,14 +1,14 @@
 import { AnimatePresence } from 'framer-motion'
 import { motion } from 'framer-motion';
-import { Card } from './Card.tsx'
+import { Card } from './components/Card.tsx'
 import PhotoOne from './assets/number-1.png'
 import PhotoTwo from './assets/number-2.png'
 import PhotoThree from './assets/number-3.png'
 import { useLocation, Routes, Route} from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import Stroop from './Stroop'
-import Reaction from './ReactionTime'
-import NBack from './NBack'
+import Stroop from './games/Stroop/Stroop.tsx'
+import Reaction from './games/ReactionTimes/ReactionTime'
+import NBack from './games/NBack/NBack.tsx'
 
 function Home() {
       //Aktualna ścieżka
@@ -40,13 +40,13 @@ function Home() {
                 <div className="flex flex-wrap justify-center gap-8 text-white">
                   <div className="redR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105">
                     <Card  
-                      path="./stroop" 
+                      path="./Stroop" 
                       img={PhotoOne} 
                       imgAlt="nr 1" 
                       ses={`${stroopSes} sesji`} 
                       name={"Kontrola"} 
                       aname={"Stroop"} 
-                      desc={"Porządkuje uwagę i wzmacnia kontrtolę poznwaczą."} 
+                      desc={"Porządkuje uwagę i wzmacnia kontrtolę poznawczą."} 
                     />
                   </div>
                   <div className="blueR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105">

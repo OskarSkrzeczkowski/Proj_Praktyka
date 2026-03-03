@@ -1,12 +1,11 @@
-
-interface ColorProps {
+interface TimeListProps {
   activeElement: string;
   inActiveElement: string;
   onTimeChange: (time: string) => void;
   currentTime: string;                 
 }
 
-export const TimeList = ({activeElement, inActiveElement, onTimeChange, currentTime}: ColorProps) => {
+export const TimeList = ({activeElement, inActiveElement, onTimeChange, currentTime}: TimeListProps) => {
   const tList = ["1 min", "1.5 min", "2 min", "3 min"];
   
   return (

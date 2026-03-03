@@ -1,5 +1,5 @@
-import { TimeList } from './TimeList'
-import { LevelList } from './LevelList'
+import { TimeList } from '../../components/TimeList'
+import { LevelList } from '../../components/LevelList'
 import { useState } from 'react'
 import { motion } from 'framer-motion';
 
@@ -58,9 +58,9 @@ function NBack(){
                         </div>
                     </div>
                 </div>
-                <div onClick={() => setIsGameActive(true)}>
-                    <h3 className="bg-purple-700 shadow-lg border-3 border-purple-800 hover:bg-purple-600 rounded-xl h-15 flex justify-center items-center text-white font-bold text-lg cursor-pointer">Rozpocznij</h3>
-                </div>
+                <button className="w-full bg-purple-700 shadow-lg border-3 border-purple-800 hover:bg-purple-600 rounded-xl h-15 flex justify-center items-center text-white font-bold text-lg cursor-pointer" onClick={() => setIsGameActive(true)}>
+                    Rozpocznij
+                </button>
                 </div>
             </div>
         ) : (

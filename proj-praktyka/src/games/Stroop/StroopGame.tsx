@@ -1,5 +1,6 @@
-import { TimeBar } from './TimeBar';
+import { TimeBar } from '../../components/TimeBar';
 import type { ColorOption } from './Stroop';
+
 interface GameProps {
   timeLeft: number;
   totalTime: number;
