@@ -1,5 +1,6 @@
 import { TimeBar } from '../../components/TimeBar';
 import type { ColorOption } from './Stroop';
+import { motion } from 'framer-motion'
 
 interface GameProps {
   timeLeft: number;
@@ -40,8 +41,15 @@ export const StroopGame = ({
           <span>Błędne: <span className="text-red-400 font-bold">{errors}</span></span>
           <span>Skuteczność: <span className="font-bold">{efficiency}%</span></span>
         </div>
-        
-        <h2 className={`text-7xl font-black ${currentColor.colorClass}`}>{currentWord.name}</h2>
+        <motion.h2
+          key={currentWord.name + currentColor.name} // Klucz zmusza do ponownej animacji przy każdej zmianie
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }} // Tutaj regulujesz "miękkość" pojawiania się
+        className={`text-7xl font-black ${currentColor.colorClass}`}
+        >
+          {currentWord.name}
+        </motion.h2>
 
         <div className="w-full flex justify-center mt-10">
           <div className="grid grid-cols-2 gap-4 justify-items-center">

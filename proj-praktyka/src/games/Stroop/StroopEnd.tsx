@@ -1,19 +1,31 @@
+import type{ ReactionInter } from "../../hooks/useStroopGame";
+
 interface EndProps {
-    score: number;
-    errors: number;
-    efficiency: string;
-    reactionTimes: number[];
-    onRestart: () => void;
+  score: number;
+  errors: number;
+  efficiency: string;
+  reactionTimes: ReactionInter[];
+  onRestart: () => void;
 }
 
 export const StroopEnd = ({ score, errors, efficiency, reactionTimes, onRestart }: EndProps) => {
     
   const avgTime = reactionTimes.length > 0 
-    ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) 
+    ? Math.round(reactionTimes.reduce((a, b) => a + b.time, 0) / reactionTimes.length) 
     : 0;
 
-    //Tymczasowe, ponieważ sprawia trudności!!!
-    const interference = avgTime;
+  const congruent = reactionTimes.filter(r => r.wasCongruent);
+  const incongruent = reactionTimes.filter(r => !r.wasCongruent);
+
+  const avgCongruent = congruent.length > 0
+    ? congruent.reduce((a, b) => a + b.time, 0) / congruent.length
+    : 0;
+
+  const avgIncongruent = incongruent.length > 0
+    ? incongruent.reduce((a, b) => a + b.time, 0) / incongruent.length
+    : 0;
+
+  const interference = Math.round(avgIncongruent - avgCongruent);
 
     
   return (

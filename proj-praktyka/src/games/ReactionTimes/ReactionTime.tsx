@@ -1,12 +1,39 @@
-import { TimeList } from '../../components/TimeList'
-import { useState } from 'react'
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ReactionGame } from './ReactionTimeGame';
+import { ReactionEnd } from './ReactionTimeEnd'
+import { ReactionMenu } from './ReactionTimeMenu';
+import { useReactionTime } from '../../hooks/useReactionTimeGame';
 
 function Reaction(){
-    //Ten stan odnosi się do tego czy gra jest aktualnie w działaniu.
-    const [isGameActive, setIsGameActive] = useState(false);
-    //Ten stan odnosi się do wyboru czasu przez użytkownika z poziomu pola z instrukcją.
-    const [selectedDuration, setSelectedDuration] =useState("1 min")
+    const game = useReactionTime(); 
+    const [selectedDuration, setSelectedDuration] = useState("1 min");
+
+    const navigate = useNavigate();
+
+    const startTimer = () => {
+        let seconds = 60;
+        if (selectedDuration === "1.5 min") seconds = 90;
+        if (selectedDuration === "2 min") seconds = 120;
+        if (selectedDuration === "3 min") seconds = 180;
+        
+        game.startGame(seconds); 
+    };
+
+const backToMain = () => {
+    if (game.isGameOver) {
+      const saved = localStorage.getItem('reaction_sessions') || '0';
+      localStorage.setItem('reaction_sessions', (parseInt(saved) + 1).toString());
+    }
+    game.exitGame();
+    navigate('/');
+  }
+
+    const formattedTime = useMemo(() => {
+    const total = Math.ceil(game.timeLeft);
+    return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
+    }, [game.timeLeft]);
 
     return(
         <motion.div
@@ -15,51 +42,34 @@ function Reaction(){
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
         >
-        {!isGameActive ? (
-            <div className="min-h-screen w-full flex items-center justify-center p-4">
-                <div className="blueR rounded-[15px] p-8 m-0 leading-[40px] text-white">
-                    <div>
-                        <h2 className="text-[36px] font-bold">Czujność</h2>
-                        <p className="text-white/75">Kalibruje czuwanie – szybsze "obudzenie" uwagi.</p>
+        {game.isGameActive ? (
+            <ReactionGame 
+                timeLeft={game.timeLeft}           
+                totalTime={game.totalTime}          
+                formattedTime={formattedTime}     
+                score={game.score}               
+                errors={game.avgTime}               
+                efficiency={game.misses.toString()}          
+                onExit={game.exitGame}
+                displayTime={game.counter}
+                onAnswer={game.handleReaction}
+            />
+    ) : game.isGameOver ? (
+            <ReactionEnd 
+            onRestart={backToMain}
+            score={game.score}  
+            avgTime={`${game.avgTime}ms`}         
+            misses={game.misses}
+            />
 
-                        <h4 className="text-[24px] pb-1.5 font-medium">Zasada</h4>
-                        <p className="text-white/75">Kliknij gdy pojawi się sygnał</p>
-
-                        <h4 className="text-[24px] pb-1.5 font-medium">Wskazówka</h4>
-                        <p className="text-white/75">Ustawienie tempa, nie test szybkości.</p>
-                    </div>
-
-                    <div className="Time">
-                        <h4 className="text-[24px] pb-1.5 font-medium">Czas trwania gry</h4>
-                        <TimeList
-                           activeElement='bg-purple-700 shadow-lg border-2 border-purple-400 scale-105'
-                           inActiveElement='bg-blue-950 border-2 border-blue-800 hover:bg-blue-940'
-                           onTimeChange={setSelectedDuration} 
-                           currentTime={selectedDuration}
-                        ></TimeList>
-                    </div>
-
-                    <div className="pb-8 border-2 border-blue-800 border-solid rounded-lg h-24 flex flex-col justify-center bg-blue-950 p-2.5 my-2.5">
-                        <h4 className="text-[24px] pb-1.5 font-medium">Sterowanie</h4>
-                        <div>
-                            <p className="leading-none">Spacja lub Enter - Reakcja</p>
-                        </div>
-                    </div>
-
-                    <button className="w-full bg-purple-700 shadow-lg border-3 border-purple-800 hover:bg-purple-600 rounded-xl h-15 flex justify-center items-center text-white font-bold text-lg cursor-pointer" onClick={() => setIsGameActive(true)}>
-                        Rozpocznij
-                    </button>
-                </div>
-            </div>
-        ) : (
-            //Ekran gry
-            <div className="text-white">
-                <h1>Gra się rozpoczęła!</h1>
-                <button onClick={() => setIsGameActive(false)}>Wróć do menu</button>
-            </div>
-        )}
-
-        </motion.div>
+    ) : (
+            <ReactionMenu
+                selectedDuration={selectedDuration}
+                setSelectedDuration={setSelectedDuration}
+                onStart={startTimer}
+            />
+        ) }
+ </motion.div>
     );
 }
 

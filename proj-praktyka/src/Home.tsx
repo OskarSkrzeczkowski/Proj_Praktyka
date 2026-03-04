@@ -16,10 +16,16 @@ function Home() {
       
       //Ten stan przechowuje liczbę odbytych sesji gry Stroop pobraną z localStorage.
       const [stroopSes, setStroopSes] = useState('0');
+      const [reactionSes, setReactionSes] = useState('0');
 
     useEffect(() => {
         const current = localStorage.getItem('stroop_sessions') || '0';
         setStroopSes(current);
+    }, [location]);
+
+    useEffect(() => {
+        const current = localStorage.getItem('reaction_sessions') || '0';
+        setReactionSes(current);
     }, [location]);
       
       return(
@@ -54,7 +60,7 @@ function Home() {
                       path="./Reaction" 
                       img={PhotoTwo} 
                       imgAlt="nr 2" 
-                      ses={"0 sesji"} 
+                      ses={`${reactionSes} sesji`} 
                       name={"Czujność"} 
                       aname={"Reaction Time"} 
                       desc={"Kalibruje czuwanie i skraca mentalny rozruch."} 
@@ -62,7 +68,7 @@ function Home() {
                   </div>
                   <div className="greenR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105">
                     <Card 
-                      path="NBack" 
+                      path="./NBack" 
                       img={PhotoThree} 
                       imgAlt="nr 3" 
                       ses={"0 sesji"} 

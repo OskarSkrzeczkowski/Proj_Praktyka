@@ -7,7 +7,11 @@ const COLORS: ColorOption[] = [
   { name: 'ZIELONY', colorClass: 'text-green-500', btnClass: 'bg-green-900 border-green-500' },
   { name: 'ŻÓŁTY', colorClass: 'text-yellow-400', btnClass: 'bg-yellow-900 border-yellow-500' },
 ];
-
+ 
+export interface ReactionInter {
+  time: number;
+  wasCongruent: boolean;
+}
 
 export function useStroopGame() {
   const [isGameActive, setIsGameActive] = useState(false);
@@ -16,10 +20,12 @@ export function useStroopGame() {
   const [totalTime, setTotalTime] = useState(60);
   const [score, setScore] = useState(0);
   const [errors, setErrors] = useState(0);
-  const [reactionTimes, setReactionTimes] = useState<number[]>([]);
+  const [reactionTimes, setReactionTimes] = useState<ReactionInter[]>([]);
   const [currentWord, setCurrentWord] = useState(COLORS[0]);
   const [currentColor, setCurrentColor] = useState(COLORS[1]);
-  const [lastQuestionTimestamp, setLastQuestionTimestamp] = useState(Date.now());
+  const [lastQuestionTimestamp, setLastQuestionTimestamp] = useState(performance.now());
+
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     let timer: number;
@@ -54,7 +60,7 @@ export function useStroopGame() {
     setErrors(0);
     setReactionTimes([]);
     setIsGameOver(false);
-    setLastQuestionTimestamp(Date.now()); // ← fix buga z timestampem
+    setLastQuestionTimestamp(performance.now());
     setIsGameActive(true);
   };
     useEffect(() => {
@@ -64,16 +70,26 @@ export function useStroopGame() {
   }, [isGameActive])
 
   const handleAnswer = (clickedName: string) => {
-    const now = Date.now();
+    if(isProcessing) return;
+
+    const now = performance.now();
     const timeTaken = now - lastQuestionTimestamp;
-    setReactionTimes((prev) => [...prev, timeTaken]);
+
+    const wasCongruent = currentWord.name === currentColor.name;
+
+    setReactionTimes(prev => [...prev, { time: timeTaken, wasCongruent}]);
     if (clickedName === currentColor.name) {
       setScore((s) => s + 1);
     } else {
       setErrors((e) => e + 1);
     }
-    setLastQuestionTimestamp(now);
-    drawNewCard();
+    setIsProcessing(true);
+
+    setTimeout(() => {
+      drawNewCard();
+      setLastQuestionTimestamp(performance.now());
+      setIsProcessing(false);
+    }, 250);
   };
 
   return {
@@ -87,6 +103,7 @@ export function useStroopGame() {
     reactionTimes,
     currentWord,
     currentColor,
+    isProcessing,
     startGame,
     handleAnswer,
     exitGame: () => setIsGameActive(false)
