@@ -44,7 +44,7 @@ function Home() {
                   <p className ="text-[16px] w-[50vw] m-1.5">Ta aplikacja nie trenuje mózgu i nie testuje inteligencji. Jej celem jest szybkie ustawienie stanu poznawczego: uwagi, czujności i ciągłości myślenia – tak, abyś mógł wejść w pracę bez zbędnego rozruchu.</p>
                 </header>
                 <div className="flex flex-wrap justify-center gap-8 text-white">
-                  <div className="redR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105">
+                  <div className="redR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105 text-red-700/60">
                     <Card  
                       path="./Stroop" 
                       img={PhotoOne} 
@@ -55,7 +55,7 @@ function Home() {
                       desc={"Porządkuje uwagę i wzmacnia kontrtolę poznawczą."} 
                     />
                   </div>
-                  <div className="blueR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105">
+                  <div className="blueR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105 text-blue-700/60">
                     <Card 
                       path="./Reaction" 
                       img={PhotoTwo} 
@@ -66,7 +66,7 @@ function Home() {
                       desc={"Kalibruje czuwanie i skraca mentalny rozruch."} 
                     />
                   </div>
-                  <div className="greenR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105">
+                  <div className="greenR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105 text-green-800/80">
                     <Card 
                       path="./NBack" 
                       img={PhotoThree} 

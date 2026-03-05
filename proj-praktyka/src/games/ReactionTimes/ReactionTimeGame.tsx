@@ -1,10 +1,6 @@
-
-//Zrobić by przedwczesne kliknięcię bylo traktowane jako przedwczesna próba!!!
 //Zrobić wizualny efekt coraz ciemniejszych cyferek, czyli wyświetlanych zer!!!
-//Zrobić na stronie końcowej informacje o najlepszym czasie!!!
-//Dodać wyskakujące okienka informujące o przedwczesnym kliknięciu lub zaniku oraz płynne animacje!!!
 
-
+import {motion, AnimatePresence} from 'framer-motion';
 import { TimeBar } from '../../components/TimeBar';
 
 interface GameProps {
@@ -13,14 +9,15 @@ interface GameProps {
   formattedTime: string;
   score: number;
   displayTime: number;
-  errors: number;
-  efficiency: string; 
+  feedback: string | null;
+  avgTime: string;
+  losses: string; 
   onExit: () => void;
   onAnswer: () => void;
 }
 
 export const ReactionGame = ({
-timeLeft, totalTime, formattedTime, score, errors, efficiency, displayTime, onExit, onAnswer
+timeLeft, totalTime, formattedTime, score, avgTime, losses, displayTime, feedback, onExit, onAnswer
 }: GameProps) => {
     return (
     <div className="fixed inset-0 flex flex-col justify-center p-6 text-white">
@@ -39,11 +36,32 @@ timeLeft, totalTime, formattedTime, score, errors, efficiency, displayTime, onEx
             <div className="absolute top-50 left-0 right-0 flex flex-col items-center">
         <div className="flex gap-8">
           <span>Próby: <span className="text-green-400 font-bold">{score}</span></span>
-          <span>Średni czas reakcji: <span className="text-red-400 font-bold">{errors}</span></span>
-          <span>Zaniki <span className="font-bold">{efficiency}</span></span>
+          <span>Średni czas reakcji: <span className="text-red-400 font-bold">{avgTime}</span></span>
+          <span>Zaniki <span className="font-bold text-yellow-500">{losses}</span></span>
         </div>
       </div>
 
+      <AnimatePresence>
+        {feedback && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.3, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.3 }}
+            
+            className="absolute left-0 right-0 bottom-144 z-50 w-full flex justify-center"
+          >
+            <div className={`px-10 py-5 rounded-3xl border-4 font-black text-4xl 
+              ${feedback === "Za wcześnie!" 
+                ? "bg-red-900 border-red-800 text-white" 
+                : feedback.includes("Trafiono") 
+                ? "bg-green-900 border-green-800 text-white" 
+                : "bg-blue-900 border-blue-800 text-white"}`}
+            >
+              {feedback}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
         <div className="flex justify-center items-center text-[128px] font-bold hover:cursor-pointer" onClick={onAnswer}>
         <div>

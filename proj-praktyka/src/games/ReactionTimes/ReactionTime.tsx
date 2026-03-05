@@ -48,10 +48,11 @@ const backToMain = () => {
                 totalTime={game.totalTime}          
                 formattedTime={formattedTime}     
                 score={game.score}               
-                errors={game.avgTime}               
-                efficiency={game.misses.toString()}          
+                avgTime={`${game.avgTime}ms`}               
+                losses={game.misses.toString()}          
                 onExit={game.exitGame}
                 displayTime={game.counter}
+                feedback={game.feedback}
                 onAnswer={game.handleReaction}
             />
     ) : game.isGameOver ? (
@@ -60,6 +61,7 @@ const backToMain = () => {
             score={game.score}  
             avgTime={`${game.avgTime}ms`}         
             misses={game.misses}
+            bTime={`${game.bestTime} ms`}
             />
 
     ) : (

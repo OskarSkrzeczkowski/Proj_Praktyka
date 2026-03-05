@@ -2,10 +2,11 @@ interface ReactionEndProps {
   onRestart: () => void;
   score: number;     
   avgTime: string;    
-  misses: number;     
+  misses: number;
+  bTime: string;     
 }
 
-export const ReactionEnd = ({onRestart, score, avgTime, misses}: ReactionEndProps) => {
+export const ReactionEnd = ({onRestart, score, avgTime, misses, bTime}: ReactionEndProps) => {
     return(
              <div className="min-h-screen w-full flex items-center justify-center p-4">
       <div className= "rounded-[15px] p-8 m-0 leading-[40px] text-white blueR">
@@ -25,7 +26,7 @@ export const ReactionEnd = ({onRestart, score, avgTime, misses}: ReactionEndProp
           
           <div className="bg-[#0B0352] border border-[#070236] p-6 rounded-2xl w-3xs flex flex-col justify-center items-center !p-4 cursor-default">
             <p className="text-white/75 text-sm">Najszybsza reakcja</p>
-            <p className="text-3xl font-bold text-purple-400">Zrobić!!!</p>
+            <p className="text-3xl font-bold text-purple-400">{bTime}</p>
           </div>
           
           <div className="bg-[#0B0352] border border-[#070236] p-6 rounded-2xl w-3xs flex flex-col justify-center items-center !p-4 cursor-default">
