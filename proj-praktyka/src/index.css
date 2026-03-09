@@ -9,9 +9,10 @@ body{
 
 .redR{ background: linear-gradient(135deg, #4e0101 0%, #741414 50%, #af1212 100%);
     border:5px solid rgb(85, 7, 7);}
-.blueR{background: linear-gradient(135deg, #09205e 0%, #0c2c5e 50%, #1d4ed8 100%);
+.blueR{background: linear-gradient(135deg, #09205e 0%, #0e3470 50%, #1d4ed8 100%);
     border:5px solid rgb(14, 3, 109);}
-.greenR{background: linear-gradient(135deg, #033f1a 0%, #048332 50%, #15803d 100%);
+.greenR{background: linear-gradient(135deg, #033f1a 0%, #055a24 50%, #15803d 100%);
     border:5px solid rgb(0, 46, 18);}
+
 
 

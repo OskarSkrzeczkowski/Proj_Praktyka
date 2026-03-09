@@ -8,14 +8,14 @@ const COLORS: ColorOption[] = [
   { name: 'ŻÓŁTY', colorClass: 'text-yellow-400', btnClass: 'bg-yellow-900 border-yellow-500' },
 ];
  
+type GamePhase = 'IDLE' | 'PLAYING' | 'GAMEOVER';
+
 export interface ReactionInter {
   time: number;
   wasCongruent: boolean;
 }
 
 export function useStroopGame() {
-  const [isGameActive, setIsGameActive] = useState(false);
-  const [isGameOver, setIsGameOver] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [totalTime, setTotalTime] = useState(60);
   const [score, setScore] = useState(0);
@@ -24,33 +24,38 @@ export function useStroopGame() {
   const [currentWord, setCurrentWord] = useState(COLORS[0]);
   const [currentColor, setCurrentColor] = useState(COLORS[1]);
   const [lastQuestionTimestamp, setLastQuestionTimestamp] = useState(performance.now());
+  const [phase, setPhase] = useState<GamePhase>('IDLE');
 
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     let timer: number;
-    if (isGameActive && timeLeft > 0) {
-      let lastTimestamp = Date.now();
+    if (phase === 'PLAYING') {
       timer = setInterval(() => {
-        const now = Date.now();
-        const delta = (now - lastTimestamp) / 1000;
-        lastTimestamp = now;
         setTimeLeft((prev) => {
-          const nextTime = prev - delta;
+          const nextTime = prev - 0.1;
           if (nextTime <= 0) {
-            setIsGameActive(false);
-            setIsGameOver(true);
+            setPhase('GAMEOVER');
+            return 0;
           }
           return nextTime;
         });
-      }, 50);
+      }, 100);
     }
     return () => clearInterval(timer);
-  }, [isGameActive]);
+  }, [phase]);
 
   const drawNewCard = () => {
-    setCurrentWord(COLORS[Math.floor(Math.random() * COLORS.length)]);
-    setCurrentColor(COLORS[Math.floor(Math.random() * COLORS.length)]);
+    let nextWord, nextColor;
+    
+  do {
+    nextWord = COLORS[Math.floor(Math.random() * COLORS.length)];
+    nextColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+  } while (nextColor.name === currentColor.name);
+
+    setCurrentWord(nextWord);
+    setCurrentColor(nextColor);
+    setLastQuestionTimestamp(performance.now());
   };
 
   const startGame = (seconds: number) => {
@@ -59,43 +64,39 @@ export function useStroopGame() {
     setScore(0);
     setErrors(0);
     setReactionTimes([]);
-    setIsGameOver(false);
     setLastQuestionTimestamp(performance.now());
-    setIsGameActive(true);
+    drawNewCard();
+    setPhase('PLAYING');
   };
-    useEffect(() => {
-    if(isGameActive){
-      drawNewCard();
-    }
-  }, [isGameActive])
 
-  const handleAnswer = (clickedName: string) => {
-    if(isProcessing) return;
+
+const handleAnswer = (clickedName: string) => {
+    if (phase !== 'PLAYING' || isProcessing) return;
 
     const now = performance.now();
     const timeTaken = now - lastQuestionTimestamp;
-
     const wasCongruent = currentWord.name === currentColor.name;
 
-    setReactionTimes(prev => [...prev, { time: timeTaken, wasCongruent}]);
+    setReactionTimes(prev => [...prev, { time: timeTaken, wasCongruent }]);
+
     if (clickedName === currentColor.name) {
       setScore((s) => s + 1);
     } else {
       setErrors((e) => e + 1);
     }
+
     setIsProcessing(true);
 
     setTimeout(() => {
       drawNewCard();
-      setLastQuestionTimestamp(performance.now());
       setIsProcessing(false);
-    }, 250);
+    }, 150);
   };
 
   return {
+    isGameActive: phase === 'PLAYING',
+    isGameOver: phase === 'GAMEOVER',
     COLORS,
-    isGameActive,
-    isGameOver,
     timeLeft,
     totalTime,
     score,
@@ -106,6 +107,6 @@ export function useStroopGame() {
     isProcessing,
     startGame,
     handleAnswer,
-    exitGame: () => setIsGameActive(false)
+    exitGame: () => setPhase('IDLE')
   };
 }

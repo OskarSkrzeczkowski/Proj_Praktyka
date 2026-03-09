@@ -61,7 +61,7 @@ export function useReactionTime() {
       }, 10);
     }
         return () => clearInterval(interval);
-    }, [phase, nextSignalTime, startTime]);
+    }, [phase, startTime]);
 
     const startNewTrial = useCallback(() => {
         setPhase('COOLDOWN')
@@ -88,7 +88,14 @@ const handleReaction = () => {
         if (phase === 'SIGNAL') {
             const reactionTime = Math.floor(performance.now() - startTime);
             setTrials(prev => [...prev, reactionTime]);
-            feedbackMain(`Trafiono (${reactionTime} ms)`)
+
+            if (reactionTime > 600) {
+            // Dodajemy zanik jako "karę" za powolną reakcję
+            setMisses(m => m + 1);
+            feedbackMain(`Za wolno! (${reactionTime} ms)`);
+        } else {
+            feedbackMain(`Trafiono! (${reactionTime} ms)`);
+        }
             startNewTrial();
         } else if (phase === 'WAITING') {
           setTrials(prev => [...prev, 0]); 

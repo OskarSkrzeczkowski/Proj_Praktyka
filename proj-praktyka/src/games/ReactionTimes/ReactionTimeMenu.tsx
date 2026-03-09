@@ -5,14 +5,18 @@ interface MenuProps {
   selectedDuration: string;
   setSelectedDuration: (time: string) => void;
   onStart: () => void;
+  onBack: () => void;
 }
 
-export const ReactionMenu = ({selectedDuration, setSelectedDuration, onStart}: MenuProps) => {
+export const ReactionMenu = ({selectedDuration, setSelectedDuration, onStart, onBack}: MenuProps) => {
     return(
 <div className="min-h-screen w-full flex items-center justify-center p-4">
                 <div className="blueR rounded-[15px] p-8 m-0 leading-[40px] text-white">
                     <div>
+                        <div className="flex gap-100">
                         <h2 className="text-[36px] font-bold">Czujność</h2>
+                        <button className="text-medium border-blue-800 bg-blue-800/50 font-medium border-2 rounded-lg p-2 !leading-[20px] max-w-20 justify-center items-center transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer" onClick={onBack}>Wróć</button>
+                        </div>
                         <p className="text-white/75">Kalibruje czuwanie – szybsze "obudzenie" uwagi.</p>
 
                         <h4 className="text-[24px] pb-1.5 font-medium">Zasada</h4>

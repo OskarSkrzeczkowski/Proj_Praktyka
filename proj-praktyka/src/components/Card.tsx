@@ -8,17 +8,18 @@ interface Props {
     img: string;
     imgAlt: string;
     path: string;
+    borderCol: string;
 }
 
-export const Card = ({ses, name, aname, desc, img, imgAlt, path}: Props) => {
+export const Card = ({ses, name, aname, desc, img, imgAlt, path, borderCol}: Props) => {
     
     return(
         <Link to = {path}>
         <div className="pb-2">
             <div className="flex items-center gap-30 pb-2.5">
                 <img className="h-12 w-12" src={img} alt={imgAlt}></img>
-                <div className='flex justify-center items-center border-2 rounded-[10px] border-solid min-w-18 px-1 py-px h-8'>
-                    <p className="font-bold">{ses}</p>
+                <div className={`flex justify-center items-center border-2 rounded-[10px] border-solid min-w-18 px-1 py-px h-8 ${borderCol}`}>
+                    <p className="font-medium">{ses}</p>
                 </div>
             </div>
             <div className='card-1'>

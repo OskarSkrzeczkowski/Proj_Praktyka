@@ -27,6 +27,9 @@ function Stroop() {
     game.exitGame();
     navigate('/');
   }
+  const backToMenu = () => {
+    navigate('/');
+  }
 
   //Gdy nowa gra zostaje uruchomiona następuje zerowanie licznika i ustawienie nowego czasu sesji uprzednio wybranego przez użytkownika.
   const startTimer = () => {
@@ -77,6 +80,7 @@ function Stroop() {
         selectedDuration={selectedDuration} 
         setSelectedDuration={setSelectedDuration} 
         onStart={startTimer} 
+        onBack={backToMenu}
       />
     )}
   </motion.div>

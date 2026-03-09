@@ -30,6 +30,10 @@ const backToMain = () => {
     navigate('/');
   }
 
+  const backToMenu = () => {
+    navigate('/');
+  }
+
     const formattedTime = useMemo(() => {
     const total = Math.ceil(game.timeLeft);
     return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
@@ -69,6 +73,7 @@ const backToMain = () => {
                 selectedDuration={selectedDuration}
                 setSelectedDuration={setSelectedDuration}
                 onStart={startTimer}
+                onBack={backToMenu}
             />
         ) }
  </motion.div>

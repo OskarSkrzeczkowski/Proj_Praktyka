@@ -19,6 +19,13 @@ interface GameProps {
 export const ReactionGame = ({
 timeLeft, totalTime, formattedTime, score, avgTime, losses, displayTime, feedback, onExit, onAnswer
 }: GameProps) => {
+
+    const counter = displayTime > 0 
+            ? displayTime.toString().padStart(4, '0') 
+            : "0000";
+
+    const opacityClasses = ["text-white", "text-white/70", "text-white/50", "text-white/30",]
+
     return (
     <div className="fixed inset-0 flex flex-col justify-center p-6 text-white">
       <div className="absolute top-0 left-0 right-0 w-full border-b border-white">
@@ -52,10 +59,12 @@ timeLeft, totalTime, formattedTime, score, avgTime, losses, displayTime, feedbac
           >
             <div className={`px-10 py-5 rounded-3xl border-4 font-black text-4xl 
               ${feedback === "Za wcześnie!" 
-                ? "bg-red-900 border-red-800 text-white" 
+                ? "bg-yellow-400 border-yellow-600 text-white" 
                 : feedback.includes("Trafiono") 
                 ? "bg-green-900 border-green-800 text-white" 
-                : "bg-blue-900 border-blue-800 text-white"}`}
+                : feedback.includes("Za wolno")
+                ? "bg-orange-900 border-orange-800 text-white" 
+                : "bg-gray-900 border-gray-800 text-white"}`}
             >
               {feedback}
             </div>
@@ -64,16 +73,16 @@ timeLeft, totalTime, formattedTime, score, avgTime, losses, displayTime, feedbac
       </AnimatePresence>
 
         <div className="flex justify-center items-center text-[128px] font-bold hover:cursor-pointer" onClick={onAnswer}>
-        <div>
-    <h1>
-        {displayTime > 0 
-            ? displayTime.toString().padStart(4, '0') 
-            : "0000"}
-    </h1>
-      </div>
-
-      </div>
-
+          <div>
+            <h1>
+              {counter.split('').map((char, index) => (
+                <span key={index} className={opacityClasses[index]}>
+                  {char}
+                </span>
+              ))} 
+            </h1>
+          </div>
+        </div>
       </div>
 )}
 
