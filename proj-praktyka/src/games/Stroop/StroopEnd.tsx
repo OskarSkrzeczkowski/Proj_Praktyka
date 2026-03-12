@@ -64,7 +64,7 @@ export const StroopEnd = ({ score, errors, efficiency, reactionTimes, onRestart 
             <li className="text-white/75">lepsza jakość pierwszych decyzji w ciągu dnia</li>
         </ul>
         </div>
-        <button //przycisk restartu, który wywołuję funkcję BackToMain z komponentu nadrzędnego, czyli stroop.tsx.
+        <button
           onClick={onRestart}
           className="w-full bg-purple-700 shadow-lg border-3 border-purple-800 hover:bg-purple-600 rounded-xl h-15 flex justify-center items-center text-white font-bold text-lg cursor-pointer"
         >

@@ -5,6 +5,7 @@ import { NBackGame } from './NBackGame'
 import { useNBackGame } from '../../hooks/useNBackGame'
 import { useState } from 'react'
 import { motion } from 'framer-motion';
+import { NBackEnd } from './NBackEnd'
 
 function NBack() {
 
@@ -20,9 +21,18 @@ function NBack() {
         if (selectedDuration === "2 min") seconds = 120;
         if (selectedDuration === "3 min") seconds = 180;
         
-        const level = parseInt(selectedLevel);
+        const level = parseInt(selectedLevel.split('-')[0]);
         game.startGame(seconds, level);
     };
+
+const backToMain = () => {
+    if (game.isGameOver) {
+        const saved = localStorage.getItem('nback_sessions') || '0';
+        localStorage.setItem('nback_sessions', (parseInt(saved) + 1).toString());
+    }
+    game.exitGame();
+    navigate('/');
+};
 
     const formattedTime = useMemo(() => {
         const total = Math.ceil(game.timeLeft);
@@ -53,7 +63,14 @@ function NBack() {
                 />
                 
             ) : game.isGameOver ? (
-                <p className="text-white text-center text-2xl">Koniec!</p>
+                <NBackEnd
+                    score={game.correct}
+                    errors={game.incorrect}
+                    efficiency={`${game.efficiency}%`}
+                    series={game.bestStreak}
+                    avgTime={`${game.avgTime} ms`}
+                    onRestart={backToMain}
+                />
             ) : (
                 <NBackMenu
                     selectedDuration={selectedDuration}

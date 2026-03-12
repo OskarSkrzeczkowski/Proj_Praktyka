@@ -25,25 +25,29 @@ export function useStroopGame() {
   const [currentColor, setCurrentColor] = useState(COLORS[1]);
   const [lastQuestionTimestamp, setLastQuestionTimestamp] = useState(performance.now());
   const [phase, setPhase] = useState<GamePhase>('IDLE');
+  const [gameStart, setGameStart] = useState<number | null>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     let timer: number;
-    if (phase === 'PLAYING') {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => {
-          const nextTime = prev - 0.1;
-          if (nextTime <= 0) {
-            setPhase('GAMEOVER');
-            return 0;
-          }
-          return nextTime;
-        });
-      }, 100);
+    if (phase === 'PLAYING' && gameStart) {
+        timer = window.setInterval(() => {
+            const nowReal = Date.now();
+            
+            const passed = (nowReal - gameStart) / 1000;
+            const left = totalTime - passed;
+
+            if (left <= 0) {
+                setPhase('GAMEOVER');
+                setTimeLeft(0);
+            } else {
+                setTimeLeft(left);
+            }
+        }, 100);
     }
     return () => clearInterval(timer);
-  }, [phase]);
+  }, [phase, gameStart, totalTime]);
 
   const drawNewCard = () => {
     let nextWord, nextColor;
@@ -59,6 +63,7 @@ export function useStroopGame() {
   };
 
   const startGame = (seconds: number) => {
+    setGameStart(Date.now());
     setTotalTime(seconds);
     setTimeLeft(seconds);
     setScore(0);

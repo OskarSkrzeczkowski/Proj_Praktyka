@@ -13,43 +13,58 @@ export function useNBackGame() {
     const [incorrect, setIncorrect] = useState(0); 
     const [streak, setStreak] = useState(0);
     const [feedback, setFeedback] = useState<string | null>(null);
+    const [startTime, setStartTime] = useState<number | null>(null);
+
+    const [reactionTimes, setReactionTimes] = useState<number[]>([]);
+    const [bestStreak, setBestStreak] = useState(0);
+    const [lastStepTimestamp, setLastStepTimestamp] = useState(0);
+
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const avgTime = reactionTimes.length > 0 
+    ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) 
+    : 0;
 
     const SYMBOLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
-
-    const isBufferFull = history.length > nLevel;
+    const canAnswer = history.length > nLevel;
 
     const feedbackMain = (text: string) => {
         setFeedback(text);
         setTimeout(() => setFeedback(null), 1000);
     };
 
-
     const nextStep = useCallback(() => {
-        const randomSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-        setCurrentSymbol(randomSymbol);
-        setHistory(prev => [...prev, randomSymbol]);
-        setFeedback(null);
-    }, []);
+        const newSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        setHistory(prev => [...prev, newSymbol]);
+        setCurrentSymbol(newSymbol);
+        setLastStepTimestamp(performance.now());
+    }, [SYMBOLS]);
 
 
     useEffect(() => {
         let timer: number;
-        if (phase === 'PLAYING') {
-            timer = setInterval(() => {
-                setTimeLeft((prev) => {
-                    if (prev <= 0) {
-                        setPhase('GAMEOVER');
-                        return 0;
-                    }
-                    return prev - 0.1;
-                });
-            }, 100);
+        if (phase === 'PLAYING' && startTime) {
+        timer = window.setInterval(() => {
+            const now = Date.now();
+            const elapsedSeconds = (now - startTime) / 1000;
+            const remaining = totalTime - elapsedSeconds;
+
+            if (remaining <= 0) {
+                setTimeLeft(0);
+                setPhase('GAMEOVER');
+                clearInterval(timer);
+            } else {
+                setTimeLeft(remaining);
+            }
+        }, 100);
         }
         return () => clearInterval(timer);
-    }, [phase]);
+    }, [phase, startTime, totalTime]);
 
     const startGame = (seconds: number, level: number) => {
+        const now = Date.now();
+        setStartTime(now);
         setTotalTime(seconds);
         setTimeLeft(seconds);
         setNLevel(level);
@@ -58,27 +73,49 @@ export function useNBackGame() {
         setStreak(0);
         setHistory([]);
         setPhase('PLAYING');
+        setReactionTimes([]);
+        setBestStreak(0);
+        setBestStreak(0);
+        setIsProcessing(false);
 
-        const first = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-        setHistory([first]);
-        setCurrentSymbol(first);
-
-        for (let i = 1; i <= level; i++) {
-            setTimeout(() => {
-                nextStep();
-            }, i * 1500);
-        }
+        const firstSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        setHistory([firstSymbol]);
+        setCurrentSymbol(firstSymbol);
+        setLastStepTimestamp(performance.now());
     };
 
+    useEffect(() => {
+        if (phase !== 'PLAYING' || isProcessing) return;
+
+        if (history.length > 0 && history.length <= nLevel) {
+            const timer = setTimeout(() => {
+                nextStep();
+            }, 1200);
+        return () => clearTimeout(timer);
+        }
+    }, [history.length, phase, nLevel, nextStep, isProcessing]);
+
     const handleAnswer = (userClaimedMatch: boolean) => {
-        if (phase !== 'PLAYING' || !isBufferFull) return;
+        if (phase !== 'PLAYING' || !canAnswer || isProcessing) return;
+
+        setIsProcessing(true);
+
+        const now = performance.now();
+        const timeTaken = Math.round(now - lastStepTimestamp);
+        setReactionTimes(prev => [...prev, timeTaken]);
 
         const targetSymbol = history[history.length - (nLevel + 1)];
         const isActualMatch = currentSymbol === targetSymbol;
 
         if (userClaimedMatch === isActualMatch) {
             setCorrect(prev => prev + 1);
-            setStreak(prev => prev + 1);
+            setStreak(prev => {
+            const newStreak = prev + 1;
+            if (newStreak > bestStreak) {
+                setBestStreak(newStreak);
+            }
+            return newStreak;
+            });
             feedbackMain("Dobrze!");
         } else {
             setIncorrect(prev => prev + 1);
@@ -88,10 +125,10 @@ export function useNBackGame() {
         
         setTimeout(() =>{
             nextStep();
-        }, 500);
+            setIsProcessing(false);
+        }, 600);
     }
     
-
     return {
         isGameActive: phase === 'PLAYING',
         isGameOver: phase === 'GAMEOVER',
@@ -102,8 +139,10 @@ export function useNBackGame() {
         correct,
         incorrect,
         streak,
+        avgTime,
+        bestStreak,
         efficiency: (correct + incorrect) === 0 ? 0 : Math.round((correct / (correct + incorrect)) * 100),
-        isBufferFull,
+        canAnswer,
         handleAnswer,
         startGame,
         exitGame: () => setPhase('IDLE')

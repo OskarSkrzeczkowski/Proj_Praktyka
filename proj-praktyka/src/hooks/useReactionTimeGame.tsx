@@ -12,6 +12,7 @@ export function useReactionTime() {
     const [trials, setTrials] = useState<number[]>([]); // Ten stan to inaczej Tablica czasów reakcji
     const [misses, setMisses] = useState(0); //Ten stan odnosi się do ilości zaników
     const [feedback, setFeedback] = useState<string | null>(null);
+    const [gameStartTime, setGameStartTime] = useState<number | null>(null);
 
     const validTrials = trials.filter(t => t>  0);
     const avgTime = validTrials.length > 0 
@@ -30,38 +31,41 @@ export function useReactionTime() {
 
     useEffect(() => {
     let interval: number;
-    if (phase !== 'IDLE' && phase !== 'GAMEOVER') {
-      interval = setInterval(() => {
-      const now = performance.now();
+    if (phase !== 'IDLE' && phase !== 'GAMEOVER' && gameStartTime) {
+        interval = window.setInterval(() => {
+            const nowPerf = performance.now();
+            const nowReal = Date.now();
 
-      setTimeLeft((prev) => {
-                const nextTime = prev - 0.01;
-                if (nextTime <= 0) {
-                    setPhase('GAMEOVER');
-                    return 0;
-                }
-                return nextTime;
-            });
+            const passedSeconds = (nowReal - gameStartTime) / 1000;
+            const leftSeconds = totalTime - passedSeconds;
+
+            if (leftSeconds <= 0) {
+                setTimeLeft(0);
+                setPhase('GAMEOVER');
+            } else {
+                setTimeLeft(leftSeconds);
+            }
+
       if (phase === 'WAITING') {
-        if (now >= nextSignalTime) {
-          setPhase('SIGNAL');
-          setStartTime(now);
-        }
-      }
+                    if (nowPerf >= nextSignalTime) {
+                        setPhase('SIGNAL');
+                        setStartTime(nowPerf);
+                    }
+                }
 
-      if (phase === 'SIGNAL') {
-        const diff = Math.floor(now - startTime);
-        setCounter(diff);
-        if (diff > 1000) {
-          setMisses(m => m + 1);
-          feedbackMain("Za późno!");
-          startNewTrial(); 
-          }
+                if (phase === 'SIGNAL') {
+                    const diff = Math.floor(nowPerf - startTime);
+                    setCounter(diff);
+                    if (diff > 1000) {
+                        setMisses(m => m + 1);
+                        feedbackMain("Za późno!");
+                        startNewTrial();
+                    }
+                }
+            }, 10);
         }
-      }, 10);
-    }
         return () => clearInterval(interval);
-    }, [phase, startTime]);
+    }, [phase, startTime, gameStartTime, totalTime, nextSignalTime]);
 
     const startNewTrial = useCallback(() => {
         setPhase('COOLDOWN')
@@ -76,6 +80,7 @@ export function useReactionTime() {
         }); }, 800);}, [])
 
     const startGame = (seconds: number) => {
+    setGameStartTime(Date.now());
     setTotalTime(seconds);
     setTimeLeft(seconds);
     setMisses(0);
@@ -90,7 +95,6 @@ const handleReaction = () => {
             setTrials(prev => [...prev, reactionTime]);
 
             if (reactionTime > 600) {
-            // Dodajemy zanik jako "karę" za powolną reakcję
             setMisses(m => m + 1);
             feedbackMain(`Za wolno! (${reactionTime} ms)`);
         } else {

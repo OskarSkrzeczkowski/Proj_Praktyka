@@ -1,4 +1,3 @@
-//Zrobić wizualny efekt coraz ciemniejszych cyferek, czyli wyświetlanych zer!!!
 
 import {motion, AnimatePresence} from 'framer-motion';
 import { TimeBar } from '../../components/TimeBar';

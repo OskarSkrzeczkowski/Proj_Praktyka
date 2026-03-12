@@ -17,6 +17,7 @@ function Home() {
       //Ten stan przechowuje liczbę odbytych sesji gry Stroop pobraną z localStorage.
       const [stroopSes, setStroopSes] = useState('0');
       const [reactionSes, setReactionSes] = useState('0');
+      const [nbackSes, setNbackSes] = useState('0');
 
     useEffect(() => {
         const current = localStorage.getItem('stroop_sessions') || '0';
@@ -27,6 +28,11 @@ function Home() {
         const current = localStorage.getItem('reaction_sessions') || '0';
         setReactionSes(current);
     }, [location]);
+
+    useEffect(() => {
+    const current = localStorage.getItem('nback_sessions') || '0';
+    setNbackSes(current);
+}, [location]);
       
       return(
         <AnimatePresence mode="wait">
@@ -73,7 +79,7 @@ function Home() {
                       path="./NBack" 
                       img={PhotoThree} 
                       imgAlt="nr 3" 
-                      ses={"0 sesji"} 
+                      ses={`${nbackSes} sesji`} 
                       name={"Tor myślenia"} 
                       aname={"N-Back"} 
                       desc={"Ustawia ciągłość myślenia i aktualizację informacji."} 
