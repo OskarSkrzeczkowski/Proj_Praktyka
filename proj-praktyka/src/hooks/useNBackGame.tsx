@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 type GamePhase = 'IDLE' | 'PLAYING' | 'GAMEOVER';
+const SYMBOLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
 export function useNBackGame() {
     const [phase, setPhase] = useState<GamePhase>('IDLE');
@@ -25,9 +26,7 @@ export function useNBackGame() {
     ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) 
     : 0;
 
-    const SYMBOLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
-    const canAnswer = history.length > nLevel;
+    const canAnswer = history.length >= nLevel;
 
     const feedbackMain = (text: string) => {
         setFeedback(text);
@@ -35,12 +34,18 @@ export function useNBackGame() {
     };
 
     const nextStep = useCallback(() => {
-        const newSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        let newSymbol;
+        const shouldBeMatch = Math.random() < 0.3;
+
+        if (shouldBeMatch && history.length >= nLevel) {
+            newSymbol = history[history.length - nLevel];
+        } else {
+            newSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        }
         setHistory(prev => [...prev, newSymbol]);
         setCurrentSymbol(newSymbol);
         setLastStepTimestamp(performance.now());
-    }, [SYMBOLS]);
-
+    }, []);
 
     useEffect(() => {
         let timer: number;
@@ -78,16 +83,14 @@ export function useNBackGame() {
         setBestStreak(0);
         setIsProcessing(false);
 
-        const firstSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-        setHistory([firstSymbol]);
-        setCurrentSymbol(firstSymbol);
-        setLastStepTimestamp(performance.now());
+        const startChar = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+        setCurrentSymbol(startChar);
     };
 
     useEffect(() => {
         if (phase !== 'PLAYING' || isProcessing) return;
 
-        if (history.length > 0 && history.length <= nLevel) {
+        if (history.length < nLevel) {
             const timer = setTimeout(() => {
                 nextStep();
             }, 1200);

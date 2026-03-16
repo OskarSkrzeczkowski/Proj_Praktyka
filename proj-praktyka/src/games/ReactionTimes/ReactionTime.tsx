@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ReactionGame } from './ReactionTimeGame';
 import { ReactionEnd } from './ReactionTimeEnd'
 import { ReactionMenu } from './ReactionTimeMenu';
 import { useReactionTime } from '../../hooks/useReactionTimeGame';
 
-function Reaction(){
-    const game = useReactionTime(); 
+function Reaction() {
+    const game = useReactionTime();
     const [selectedDuration, setSelectedDuration] = useState("1 min");
 
     const navigate = useNavigate();
@@ -17,67 +17,82 @@ function Reaction(){
         if (selectedDuration === "1.5 min") seconds = 90;
         if (selectedDuration === "2 min") seconds = 120;
         if (selectedDuration === "3 min") seconds = 180;
-        
-        game.startGame(seconds); 
+
+        game.startGame(seconds);
     };
 
-const backToMain = () => {
-    if (game.isGameOver) {
-      const saved = localStorage.getItem('reaction_sessions') || '0';
-      localStorage.setItem('reaction_sessions', (parseInt(saved) + 1).toString());
+    const backToMain = () => {
+        if (game.isGameOver) {
+            const saved = localStorage.getItem('reaction_sessions') || '0';
+            localStorage.setItem('reaction_sessions', (parseInt(saved) + 1).toString());
+        }
+        game.exitGame();
+        navigate('/');
     }
-    game.exitGame();
-    navigate('/');
-  }
 
-  const backToMenu = () => {
-    navigate('/');
-  }
+    const backToMenu = () => {
+        navigate('/');
+    }
 
     const formattedTime = useMemo(() => {
-    const total = Math.ceil(game.timeLeft);
-    return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
+        const total = Math.ceil(game.timeLeft);
+        return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
     }, [game.timeLeft]);
 
-    return(
+    return (
         <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
         >
-        {game.isGameActive ? (
-            <ReactionGame 
-                timeLeft={game.timeLeft}           
-                totalTime={game.totalTime}          
-                formattedTime={formattedTime}     
-                score={game.score}               
-                avgTime={`${game.avgTime}ms`}               
-                losses={game.misses.toString()}          
-                onExit={game.exitGame}
-                displayTime={game.counter}
-                feedback={game.feedback}
-                onAnswer={game.handleReaction}
-            />
-    ) : game.isGameOver ? (
-            <ReactionEnd 
-            onRestart={backToMain}
-            score={game.score}  
-            avgTime={`${game.avgTime}ms`}         
-            misses={game.misses}
-            bTime={`${game.bestTime} ms`}
-            />
-
-    ) : (
-            <ReactionMenu
-                selectedDuration={selectedDuration}
-                setSelectedDuration={setSelectedDuration}
-                onStart={startTimer}
-                onBack={backToMenu}
-            />
-        ) }
- </motion.div>
+            <AnimatePresence>
+                {game.isGameActive ? (
+                    <motion.div
+                        key="game"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}>
+                        <ReactionGame
+                            timeLeft={game.timeLeft}
+                            totalTime={game.totalTime}
+                            formattedTime={formattedTime}
+                            score={game.score}
+                            avgTime={`${game.avgTime}ms`}
+                            losses={game.misses.toString()}
+                            onExit={game.exitGame}
+                            displayTime={game.counter}
+                            feedback={game.feedback}
+                            onAnswer={game.handleReaction}
+                        /></motion.div>
+                ) : game.isGameOver ? (
+                    <motion.div
+                        key="end"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}>
+                        <ReactionEnd
+                            onRestart={backToMain}
+                            score={game.score}
+                            avgTime={`${game.avgTime}ms`}
+                            misses={game.misses}
+                            bTime={`${game.bestTime} ms`}
+                        /></motion.div>
+                ) : (
+                    <motion.div
+                        key="menu"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}>
+                        <ReactionMenu
+                            selectedDuration={selectedDuration}
+                            setSelectedDuration={setSelectedDuration}
+                            onStart={startTimer}
+                            onBack={backToMenu}
+                        /></motion.div>
+                )}
+            </AnimatePresence>
+        </motion.div>
     );
 }
-
 export default Reaction;
