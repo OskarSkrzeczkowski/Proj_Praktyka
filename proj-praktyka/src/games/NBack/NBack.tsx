@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { NBackMenu } from './NBackMenu'
 import { NBackGame } from './NBackGame'
@@ -6,37 +5,31 @@ import { useNBackGame } from '../../hooks/useNBackGame'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion';
 import { NBackEnd } from './NBackEnd'
+import { DURATION_MAP } from '../../utils/time';
+import { useSessionStore } from '../../store/sessionStore';
+import { formatTime } from '../../utils/format'
+
 
 function NBack() {
     const game = useNBackGame();
     const navigate = useNavigate();
+    const { incrementNBack } = useSessionStore();
 
     const [selectedDuration, setSelectedDuration] = useState("1 min");
     const [selectedLevel, setSelectedLevel] = useState("1-Back (podstawowy)");
 
     const startTimer = () => {
-        let seconds = 60;
-        if (selectedDuration === "1.5 min") seconds = 90;
-        if (selectedDuration === "2 min") seconds = 120;
-        if (selectedDuration === "3 min") seconds = 180;
+        const seconds = DURATION_MAP[selectedDuration] ?? 60;
 
         const level = parseInt(selectedLevel.split('-')[0]);
         game.startGame(seconds, level);
     };
 
     const backToMain = () => {
-        if (game.isGameOver) {
-            const saved = localStorage.getItem('nback_sessions') || '0';
-            localStorage.setItem('nback_sessions', (parseInt(saved) + 1).toString());
-        }
+        if (game.isGameOver) incrementNBack();
         game.exitGame();
         navigate('/');
     };
-
-    const formattedTime = useMemo(() => {
-        const total = Math.ceil(game.timeLeft);
-        return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
-    }, [game.timeLeft]);
 
     return (
         <motion.div
@@ -55,7 +48,7 @@ function NBack() {
                         <NBackGame
                             timeLeft={game.timeLeft}
                             totalTime={game.totalTime}
-                            formattedTime={formattedTime}
+                            formattedTime={formatTime(game.timeLeft)}
                             correct={game.correct}
                             incorrect={game.incorrect}
                             efficiency={game.efficiency}

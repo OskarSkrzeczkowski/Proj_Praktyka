@@ -1,4 +1,5 @@
 import type{ ReactionInter } from "../../hooks/useStroopGame";
+import { formatMs } from '../../utils/format';
 
 interface EndProps {
   score: number;
@@ -10,31 +11,33 @@ interface EndProps {
 
 export const StroopEnd = ({ score, errors, efficiency, reactionTimes, onRestart }: EndProps) => {
     
-  const avgTime = reactionTimes.length > 0 
+const avgTime = reactionTimes.length > 0 
     ? Math.round(reactionTimes.reduce((a, b) => a + b.time, 0) / reactionTimes.length) 
     : 0;
 
-  const congruent = reactionTimes.filter(r => r.wasCongruent);
-  const incongruent = reactionTimes.filter(r => !r.wasCongruent);
+const congruent = reactionTimes.filter(r => r.wasCongruent);
+const incongruent = reactionTimes.filter(r => !r.wasCongruent);
 
-  const avgCongruent = congruent.length > 0
+const avgCongruent = congruent.length > 0
     ? congruent.reduce((a, b) => a + b.time, 0) / congruent.length
     : 0;
 
-  const avgIncongruent = incongruent.length > 0
+const avgIncongruent = incongruent.length > 0
     ? incongruent.reduce((a, b) => a + b.time, 0) / incongruent.length
     : 0;
 
-  const interference = Math.round(avgIncongruent - avgCongruent);
-
+const interference = Math.round(avgIncongruent - avgCongruent);
+    {congruent.length > 0 && incongruent.length > 0
+        ? `${interference}ms`
+        : "Za mało danych"};
     
-  return (
+return (
     <div className="min-h-screen w-full flex items-center justify-center p-4">
       <div className= "rounded-[15px] p-8 m-0 leading-[40px] text-white redR">
         <h2 className="!leading-18 text-[36px] font-bold">Gotowe</h2>
         <p className="!leading-6 text-white/75">To ćwiczenie pomaga utrzymać klarowność myślenia i ogranicza poznawczy chaos na początku pracy.</p>
         <h3 className="text-xl font-bold !my-6">Twoje wyniki:</h3>
-<div className="grid grid-cols-2 gap-2 justify-items-center w-full !mb-6">
+        <div className="grid grid-cols-2 gap-2 justify-items-center w-full !mb-6">
           <div className="bg-[#310606a6] border border-[#4e0101] p-6 rounded-2xl w-3xs flex flex-col justify-center items-center !p-4 cursor-default">
             <p className="text-white/75 text-sm">Poprawne</p>
             <p className="text-3xl font-bold text-purple-400">{score}/{score + errors}</p>
@@ -42,17 +45,20 @@ export const StroopEnd = ({ score, errors, efficiency, reactionTimes, onRestart 
           
           <div className="bg-[#310606a6] border border-[#4e0101] p-6 rounded-2xl w-3xs flex flex-col justify-center items-center !p-4 cursor-default">
             <p className="text-white/75 text-sm">Skuteczność</p>
-            <p className="text-3xl font-bold text-purple-400">{efficiency}%</p>
+            <p className="text-3xl font-bold text-purple-400">{efficiency}</p>
           </div>
           
           <div className="bg-[#310606a6] border border-[#4e0101] p-6 rounded-2xl w-3xs flex flex-col justify-center items-center !p-4 cursor-default">
             <p className="text-white/75 text-sm">Średni czas reakcji</p>
-            <p className="text-3xl font-bold text-purple-400">{avgTime}ms</p>
+            <p className="text-3xl font-bold text-purple-400">{formatMs(avgTime)}</p>
           </div>
           
           <div className="bg-[#310606a6] border border-[#4e0101] p-6 rounded-2xl w-3xs flex flex-col justify-center items-center !p-4 cursor-default">
             <p className="text-white/75 text-sm">Efekt interferencji</p>
-            <p className="text-3xl font-bold text-purple-400">{interference}ms</p>
+            <p className="text-3xl font-bold text-purple-400">
+                {congruent.length > 0 && incongruent.length > 0
+                    ? formatMs(interference)
+                    : "0"}</p>
           </div>
         </div>
         <div className="!mb-8">
@@ -65,6 +71,7 @@ export const StroopEnd = ({ score, errors, efficiency, reactionTimes, onRestart 
         </ul>
         </div>
         <button
+          aria-label="Wróć do strony głównej" 
           onClick={onRestart}
           className="w-full bg-purple-700 shadow-lg border-3 border-purple-800 hover:bg-purple-600 rounded-xl h-15 flex justify-center items-center text-white font-bold text-lg cursor-pointer"
         >

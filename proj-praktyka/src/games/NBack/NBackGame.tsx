@@ -25,10 +25,7 @@ export const NBackGame = ({
       
       <div className="absolute top-0 left-0 right-0 w-full border-b border-white/20">
         <div className="mx-auto flex justify-center h-16 gap-x-64 items-center py-4 px-8">
-          <button 
-            onClick={onExit} 
-            className="hover:bg-white/10 p-2 rounded-xl transition-colors cursor-pointer"
-          >
+          <button aria-label="Wróć do menu" onClick={onExit} className="hover:bg-white/10 p-2 rounded-xl transition-colors cursor-pointer">
             <span>&larr; Wróć</span>
           </button>
           <div>Pozostało: <span>{formattedTime}</span></div>

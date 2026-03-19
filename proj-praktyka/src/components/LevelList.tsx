@@ -11,14 +11,14 @@ export const LevelList = ({activeElement, inActiveElement, onLevelChange, curren
   return(
     <ul className="flex justify-center gap-8">
       {Level.map((ListElement) => (
-        <li
+        <button
           key={ListElement}
             className={`p-3 rounded-lg cursor-pointer text-white font-medium flex flex-wrap justify-center items-center p-1.5 leading-none text-center rounded-[10px] w-40 h-20 transition duration-300 ease-in-out
                   ${currentLevel === ListElement ? activeElement : inActiveElement}`}
             onClick={() => onLevelChange(ListElement)}
         >
         {ListElement}
-        </li>
+        </button>
       ))}
     </ul>
   )

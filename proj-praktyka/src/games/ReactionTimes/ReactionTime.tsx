@@ -1,31 +1,28 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactionGame } from './ReactionTimeGame';
 import { ReactionEnd } from './ReactionTimeEnd'
 import { ReactionMenu } from './ReactionTimeMenu';
 import { useReactionTime } from '../../hooks/useReactionTimeGame';
+import { DURATION_MAP } from '../../utils/time';
+import { useSessionStore } from '../../store/sessionStore';
+import { formatTime, formatMs } from '../../utils/format'
 
 function Reaction() {
     const game = useReactionTime();
+    const { incrementReaction } = useSessionStore();
     const [selectedDuration, setSelectedDuration] = useState("1 min");
 
     const navigate = useNavigate();
 
     const startTimer = () => {
-        let seconds = 60;
-        if (selectedDuration === "1.5 min") seconds = 90;
-        if (selectedDuration === "2 min") seconds = 120;
-        if (selectedDuration === "3 min") seconds = 180;
-
+        const seconds = DURATION_MAP[selectedDuration] ?? 60;
         game.startGame(seconds);
     };
 
     const backToMain = () => {
-        if (game.isGameOver) {
-            const saved = localStorage.getItem('reaction_sessions') || '0';
-            localStorage.setItem('reaction_sessions', (parseInt(saved) + 1).toString());
-        }
+        if (game.isGameOver) incrementReaction();
         game.exitGame();
         navigate('/');
     }
@@ -33,11 +30,6 @@ function Reaction() {
     const backToMenu = () => {
         navigate('/');
     }
-
-    const formattedTime = useMemo(() => {
-        const total = Math.ceil(game.timeLeft);
-        return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
-    }, [game.timeLeft]);
 
     return (
         <motion.div
@@ -56,9 +48,9 @@ function Reaction() {
                         <ReactionGame
                             timeLeft={game.timeLeft}
                             totalTime={game.totalTime}
-                            formattedTime={formattedTime}
+                            formattedTime={formatTime(game.timeLeft)}
                             score={game.score}
-                            avgTime={`${game.avgTime}ms`}
+                            avgTime={formatMs(game.avgTime)}
                             losses={game.misses.toString()}
                             onExit={game.exitGame}
                             displayTime={game.counter}
@@ -74,9 +66,9 @@ function Reaction() {
                         <ReactionEnd
                             onRestart={backToMain}
                             score={game.score}
-                            avgTime={`${game.avgTime}ms`}
+                            avgTime={formatMs(game.avgTime)}
                             misses={game.misses}
-                            bTime={`${game.bestTime} ms`}
+                            bTime={formatMs(game.bestTime)}
                         /></motion.div>
                 ) : (
                     <motion.div

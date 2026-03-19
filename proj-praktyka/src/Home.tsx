@@ -1,39 +1,20 @@
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
-import { Card } from './components/Card.tsx'
-import PhotoOne from './assets/red.png'
-import PhotoTwo from './assets/blue.png'
-import PhotoThree from './assets/green2.png'
-import { useLocation, Routes, Route} from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import Stroop from './games/Stroop/Stroop.tsx'
-import Reaction from './games/ReactionTimes/ReactionTime'
-import NBack from './games/NBack/NBack.tsx'
+import { Card } from './components/Card.tsx';
+import PhotoOne from './assets/red.png';
+import PhotoTwo from './assets/blue.png';
+import PhotoThree from './assets/green2.png';
+import { useLocation, Routes, Route} from 'react-router-dom';
+import Stroop from './games/Stroop/Stroop.tsx';
+import Reaction from './games/ReactionTimes/ReactionTime';
+import NBack from './games/NBack/NBack.tsx';
+import { useSessionStore } from './store/sessionStore';
 
 function Home() {
-      //Aktualna ścieżka
       const location = useLocation(); 
       
-      //Ten stan przechowuje liczbę odbytych sesji gry Stroop pobraną z localStorage.
-      const [stroopSes, setStroopSes] = useState('0');
-      const [reactionSes, setReactionSes] = useState('0');
-      const [nbackSes, setNbackSes] = useState('0');
+      const { stroopSessions, reactionSessions, nbackSessions } = useSessionStore();
 
-    useEffect(() => {
-        const current = localStorage.getItem('stroop_sessions') || '0';
-        setStroopSes(current);
-    }, [location]);
-
-    useEffect(() => {
-        const current = localStorage.getItem('reaction_sessions') || '0';
-        setReactionSes(current);
-    }, [location]);
-
-    useEffect(() => {
-    const current = localStorage.getItem('nback_sessions') || '0';
-    setNbackSes(current);
-}, [location]);
-      
       return(
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
@@ -55,10 +36,10 @@ function Home() {
                       path="./Stroop" 
                       img={PhotoOne} 
                       imgAlt="nr 1" 
-                      ses={`${stroopSes} sesji`} 
+                      ses={`${stroopSessions} sesji`} 
                       name={"Kontrola"} 
                       aname={"Stroop"} 
-                      desc={"Porządkuje uwagę i wzmacnia kontrtolę poznawczą."} 
+                      desc={"Porządkuje uwagę i wzmacnia kontrolę poznawczą."} 
                       borderCol={"border-red-950/70 border-2 text-red-200/80 bg-red-400/40"}
                     />
                   </div>
@@ -67,7 +48,7 @@ function Home() {
                       path="./Reaction" 
                       img={PhotoTwo} 
                       imgAlt="nr 2" 
-                      ses={`${reactionSes} sesji`} 
+                      ses={`${reactionSessions} sesji`} 
                       name={"Czujność"} 
                       aname={"Reaction Time"} 
                       desc={"Kalibruje czuwanie i skraca mentalny rozruch."} 
@@ -79,7 +60,7 @@ function Home() {
                       path="./NBack" 
                       img={PhotoThree} 
                       imgAlt="nr 3" 
-                      ses={`${nbackSes} sesji`} 
+                      ses={`${nbackSessions} sesji`} 
                       name={"Tor myślenia"} 
                       aname={"N-Back"} 
                       desc={"Ustawia ciągłość myślenia i aktualizację informacji."} 

@@ -45,7 +45,8 @@ export const NBackEnd = ({onRestart, score, errors, efficiency, avgTime, series}
             <li className="text-white/75">większa ciągłość myślenia bez przeciążenia</li>
         </ul>
         </div>
-        <button 
+        <button
+          aria-label="Wróć do strony głównej" 
           onClick={onRestart}
           className="w-full bg-purple-700 shadow-lg border-3 border-purple-800 hover:bg-purple-600 rounded-xl h-15 flex justify-center items-center text-white font-bold text-lg cursor-pointer"
         >

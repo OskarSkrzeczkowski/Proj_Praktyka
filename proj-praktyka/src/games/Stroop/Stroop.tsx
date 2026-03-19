@@ -1,10 +1,14 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StroopMenu } from './StroopMenu';
 import { StroopGame } from './StroopGame';
 import { StroopEnd } from './StroopEnd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useStroopGame } from '../../hooks/useStroopGame';
+import { DURATION_MAP } from '../../utils/time';
+import { useSessionStore } from '../../store/sessionStore';
+import { formatPercent, formatTime } from '../../utils/format'
+
 
 export interface ColorOption {
     name: string;
@@ -16,14 +20,10 @@ function Stroop() {
     const [selectedDuration, setSelectedDuration] = useState("1 min"); //Ten stan odnosi się do wyboru czasu przez użytkownika z poziomu pola z instrukcją.
     const navigate = useNavigate(); //Narzędzie do zmiany podstron.
     const game = useStroopGame();
-
+    const { incrementStroop } = useSessionStore();
     //Funkcja, która kończy sesję gry i powodująca powrót do strony głównej.
     const backToMain = () => {
-        if (game.isGameOver) {
-            //Zapis, który umożiwia zapisanie odbytej sesji gry w pamięci przeglądarki, czyli taki licznik sesji.
-            const saved = localStorage.getItem('stroop_sessions') || '0';
-            localStorage.setItem('stroop_sessions', (parseInt(saved) + 1).toString());
-        }
+        if (game.isGameOver) incrementStroop();
         game.exitGame();
         navigate('/');
     }
@@ -33,21 +33,13 @@ function Stroop() {
 
     //Gdy nowa gra zostaje uruchomiona następuje zerowanie licznika i ustawienie nowego czasu sesji uprzednio wybranego przez użytkownika.
     const startTimer = () => {
-        let seconds = 60;
-        if (selectedDuration === "1.5 min") seconds = 90;
-        if (selectedDuration === "2 min") seconds = 120;
-        if (selectedDuration === "3 min") seconds = 180;
+        const seconds = DURATION_MAP[selectedDuration] ?? 60;
         game.startGame(seconds);
     };
 
     // Obliczanie sumy wszystkich kliknięć oraz skuteczność
     const totalAnswers = game.score + game.errors;
-    const efficiency = totalAnswers === 0 ? "0" : ((game.score / totalAnswers) * 100).toFixed(0);
-    //Napis - minuty i sekundy
-    const formattedTime = useMemo(() => {
-        const total = Math.ceil(game.timeLeft);
-        return `${Math.floor(total / 60)}:${(total % 60).toString().padStart(2, '0')}`;
-    }, [game.timeLeft]);
+    const efficiencyValue = totalAnswers === 0 ? 0 : Math.round((game.score / totalAnswers) * 100);
 
     return (
         //Animacja przejść między podstronami
@@ -67,8 +59,8 @@ function Stroop() {
                         exit={{ opacity: 0 }}>
                         <StroopGame
                             {...game}
-                            formattedTime={formattedTime}
-                            efficiency={efficiency}
+                            formattedTime={formatTime(game.timeLeft)}
+                            efficiency={formatPercent(efficiencyValue)}
                             onExit={game.exitGame}
                             onAnswer={game.handleAnswer}
                         /></motion.div>
@@ -81,7 +73,7 @@ function Stroop() {
                         <StroopEnd
                             score={game.score}
                             errors={game.errors}
-                            efficiency={efficiency}
+                            efficiency={formatPercent(efficiencyValue)}
                             reactionTimes={game.reactionTimes}
                             onRestart={backToMain}
                         /></motion.div>

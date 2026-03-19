@@ -45,7 +45,7 @@ export function useNBackGame() {
         setHistory(prev => [...prev, newSymbol]);
         setCurrentSymbol(newSymbol);
         setLastStepTimestamp(performance.now());
-    }, []);
+    }, [history, nLevel]);
 
     useEffect(() => {
         let timer: number;
@@ -107,7 +107,7 @@ export function useNBackGame() {
         const timeTaken = Math.round(now - lastStepTimestamp);
         setReactionTimes(prev => [...prev, timeTaken]);
 
-        const targetSymbol = history[history.length - (nLevel + 1)];
+        const targetSymbol = history[history.length - nLevel];
         const isActualMatch = currentSymbol === targetSymbol;
 
         if (userClaimedMatch === isActualMatch) {
