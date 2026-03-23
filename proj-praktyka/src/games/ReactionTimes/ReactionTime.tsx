@@ -11,7 +11,7 @@ import { formatTime, formatMs } from '../../utils/format'
 
 function Reaction() {
     const game = useReactionTime();
-    const { incrementReaction } = useSessionStore();
+    const { addReactionResult } = useSessionStore();
     const [selectedDuration, setSelectedDuration] = useState("1 min");
 
     const navigate = useNavigate();
@@ -22,7 +22,15 @@ function Reaction() {
     };
 
     const backToMain = () => {
-        if (game.isGameOver) incrementReaction();
+        if (game.isGameOver){
+            addReactionResult({
+                duration: DURATION_MAP[selectedDuration] ?? 60,
+                attempts: game.trials,
+                misses: game.misses,
+                avgReactionTime: game.avgTime,
+                bestReactionTime: game.bestTime
+            })
+        }
         game.exitGame();
         navigate('/');
     }

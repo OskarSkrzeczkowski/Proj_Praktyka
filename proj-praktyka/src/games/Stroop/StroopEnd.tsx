@@ -5,31 +5,14 @@ interface EndProps {
   score: number;
   errors: number;
   efficiency: string;
-  reactionTimes: ReactionInter[];
+  avgTime: number;
+  interference: number;
+  congruentCount: number;
+  incongruentCount: number;
   onRestart: () => void;
 }
 
-export const StroopEnd = ({ score, errors, efficiency, reactionTimes, onRestart }: EndProps) => {
-    
-const avgTime = reactionTimes.length > 0 
-    ? Math.round(reactionTimes.reduce((a, b) => a + b.time, 0) / reactionTimes.length) 
-    : 0;
-
-const congruent = reactionTimes.filter(r => r.wasCongruent);
-const incongruent = reactionTimes.filter(r => !r.wasCongruent);
-
-const avgCongruent = congruent.length > 0
-    ? congruent.reduce((a, b) => a + b.time, 0) / congruent.length
-    : 0;
-
-const avgIncongruent = incongruent.length > 0
-    ? incongruent.reduce((a, b) => a + b.time, 0) / incongruent.length
-    : 0;
-
-const interference = Math.round(avgIncongruent - avgCongruent);
-    {congruent.length > 0 && incongruent.length > 0
-        ? `${interference}ms`
-        : "Za mało danych"};
+export const StroopEnd = ({ score, errors, efficiency, avgTime, interference, congruentCount, incongruentCount, onRestart }: EndProps) => {
     
 return (
     <div className="min-h-screen w-full flex items-center justify-center p-4">
@@ -56,7 +39,7 @@ return (
           <div className="bg-[#310606a6] border border-[#4e0101] p-6 rounded-2xl w-3xs flex flex-col justify-center items-center !p-4 cursor-default">
             <p className="text-white/75 text-sm">Efekt interferencji</p>
             <p className="text-3xl font-bold text-purple-400">
-                {congruent.length > 0 && incongruent.length > 0
+                {congruentCount > 0 && incongruentCount > 0
                     ? formatMs(interference)
                     : "0"}</p>
           </div>

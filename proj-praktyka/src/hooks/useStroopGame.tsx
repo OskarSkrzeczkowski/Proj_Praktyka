@@ -29,6 +29,26 @@ export function useStroopGame() {
 
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const totalAnswers = score + errors;
+  const efficiencyValue = totalAnswers === 0 ? 0 : Math.round((score / totalAnswers) * 100);
+
+  const avgTime = reactionTimes.length > 0 
+    ? Math.round(reactionTimes.reduce((a, b) => a + b.time, 0) / reactionTimes.length) 
+    : 0;
+
+  const congruent = reactionTimes.filter(r => r.wasCongruent);
+  const incongruent = reactionTimes.filter(r => !r.wasCongruent);
+
+  const avgCongruent = congruent.length > 0
+    ? congruent.reduce((a, b) => a + b.time, 0) / congruent.length
+    : 0;
+
+  const avgIncongruent = incongruent.length > 0
+    ? incongruent.reduce((a, b) => a + b.time, 0) / incongruent.length
+    : 0;
+
+  const interference = Math.round(avgIncongruent - avgCongruent);
+
   useEffect(() => {
     let timer: number;
     if (phase === 'PLAYING' && gameStart) {
@@ -98,6 +118,30 @@ const handleAnswer = (clickedName: string) => {
     }, 150);
   };
 
+    useEffect(() => {
+        if (phase !== 'PLAYING') return;
+
+        const handleKey = (e: KeyboardEvent) => {
+
+            const keyMap: { [key: string]: number } = {
+             '1': 0, // Czerwony
+             '2': 1, // Niebieski
+             '3': 2, // Zielony
+             '4': 3  // Żółty
+            };
+
+            const colorIndex = keyMap[e.key];
+
+            if (colorIndex !== undefined) {
+                const colorName = COLORS[colorIndex].name;
+                handleAnswer(colorName);
+            }
+        };
+
+        window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+    }, [phase, handleAnswer]);
+
   return {
     isGameActive: phase === 'PLAYING',
     isGameOver: phase === 'GAMEOVER',
@@ -106,6 +150,11 @@ const handleAnswer = (clickedName: string) => {
     totalTime,
     score,
     errors,
+    avgTime,
+    interference,
+    efficiencyValue,
+    congruentCount: congruent.length,
+    incongruentCount: incongruent.length,
     reactionTimes,
     currentWord,
     currentColor,

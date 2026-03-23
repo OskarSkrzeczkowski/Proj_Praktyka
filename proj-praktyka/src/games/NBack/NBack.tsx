@@ -13,7 +13,7 @@ import { formatTime } from '../../utils/format'
 function NBack() {
     const game = useNBackGame();
     const navigate = useNavigate();
-    const { incrementNBack } = useSessionStore();
+    const { addNBackResult } = useSessionStore();
 
     const [selectedDuration, setSelectedDuration] = useState("1 min");
     const [selectedLevel, setSelectedLevel] = useState("1-Back (podstawowy)");
@@ -26,7 +26,18 @@ function NBack() {
     };
 
     const backToMain = () => {
-        if (game.isGameOver) incrementNBack();
+        if (game.isGameOver){
+            addNBackResult({
+                duration: DURATION_MAP[selectedDuration] ?? 60,
+                nLevel: parseInt(selectedLevel.split('-')[0]),
+                correct: game.correct,
+                incorrect: game.incorrect,
+                efficiency: game.efficiency,
+                avgReactionTime: game.avgTime,
+                bestStreak: game.bestStreak
+
+            })
+        }
         game.exitGame();
         navigate('/');
     };

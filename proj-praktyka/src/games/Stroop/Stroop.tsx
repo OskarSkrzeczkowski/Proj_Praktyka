@@ -20,10 +20,20 @@ function Stroop() {
     const [selectedDuration, setSelectedDuration] = useState("1 min"); //Ten stan odnosi się do wyboru czasu przez użytkownika z poziomu pola z instrukcją.
     const navigate = useNavigate(); //Narzędzie do zmiany podstron.
     const game = useStroopGame();
-    const { incrementStroop } = useSessionStore();
+    const { addStroopResult } = useSessionStore();
+    
     //Funkcja, która kończy sesję gry i powodująca powrót do strony głównej.
     const backToMain = () => {
-        if (game.isGameOver) incrementStroop();
+        if (game.isGameOver){
+            addStroopResult({
+                duration: DURATION_MAP[selectedDuration] ?? 60,
+                score: game.score,
+                errors: game.errors,
+                efficiency: efficiencyValue,
+                avgReactionTime: game.avgTime,
+                interference: game.interference,
+            })
+        }
         game.exitGame();
         navigate('/');
     }
@@ -74,7 +84,10 @@ function Stroop() {
                             score={game.score}
                             errors={game.errors}
                             efficiency={formatPercent(efficiencyValue)}
-                            reactionTimes={game.reactionTimes}
+                            avgTime={game.avgTime}
+                            interference={game.interference}
+                            congruentCount={game.congruentCount}
+                            incongruentCount={game.incongruentCount}
                             onRestart={backToMain}
                         /></motion.div>
                 ) : (

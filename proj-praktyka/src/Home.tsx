@@ -4,16 +4,23 @@ import { Card } from './components/Card.tsx';
 import PhotoOne from './assets/red.png';
 import PhotoTwo from './assets/blue.png';
 import PhotoThree from './assets/green2.png';
-import { useLocation, Routes, Route} from 'react-router-dom';
+import { useLocation, Routes, Route, Link} from 'react-router-dom';
 import Stroop from './games/Stroop/Stroop.tsx';
 import Reaction from './games/ReactionTimes/ReactionTime';
 import NBack from './games/NBack/NBack.tsx';
-import { useSessionStore } from './store/sessionStore';
+import Stats from './stats/Stats.tsx'
+import { useSessionStore } from './store/sessionStore.tsx';
+
 
 function Home() {
       const location = useLocation(); 
+      const { stroopHistory, reactionHistory, nbackHistory } = useSessionStore();
+
+
+      const stroopSessions = stroopHistory.length;
+      const reactionSessions = reactionHistory.length;
+      const nbackSessions = nbackHistory.length;
       
-      const { stroopSessions, reactionSessions, nbackSessions } = useSessionStore();
 
       return(
         <AnimatePresence mode="wait">
@@ -33,7 +40,7 @@ function Home() {
                 <div className="flex flex-wrap justify-center gap-8 text-white">
                   <div className="redR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105 text-red-700/60">
                     <Card  
-                      path="./Stroop" 
+                      path="/Stroop" 
                       img={PhotoOne} 
                       imgAlt="nr 1" 
                       ses={`${stroopSessions} sesji`} 
@@ -45,7 +52,7 @@ function Home() {
                   </div>
                   <div className="blueR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105">
                     <Card 
-                      path="./Reaction" 
+                      path="/Reaction" 
                       img={PhotoTwo} 
                       imgAlt="nr 2" 
                       ses={`${reactionSessions} sesji`} 
@@ -57,7 +64,7 @@ function Home() {
                   </div>
                   <div className="greenR rounded-[15px] p-5 m-2.5 text-left max-w-[300px] inline-block transition-transform duration-300 ease-in-out hover:scale-105 text-green-800/80">
                     <Card 
-                      path="./NBack" 
+                      path="/NBack" 
                       img={PhotoThree} 
                       imgAlt="nr 3" 
                       ses={`${nbackSessions} sesji`} 
@@ -71,11 +78,15 @@ function Home() {
                 <footer>
                   <p className="text-white/80 italic m-4">To nie jest test. Nie oceniaj wyniku – liczy się wejście w stan.</p>
                 </footer>
+                <div>
+                    <Link to="/Stats" className="text-white border-4 rounded-lg p-2 bg-white/20">Statystyki</Link>
+                </div>
               </motion.div>
             } />
             <Route path="/Stroop" element={<Stroop />} />
             <Route path="/Reaction" element={<Reaction />} />
             <Route path="/NBack" element={<NBack />} />
+            <Route path="/Stats" element={<Stats />} />
           </Routes>
         </AnimatePresence>
       );

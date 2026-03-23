@@ -131,6 +131,25 @@ export function useNBackGame() {
             setIsProcessing(false);
         }, 600);
     }
+
+    useEffect(() => {
+        if (phase !== 'PLAYING') return;
+
+        const handleKey = (e: KeyboardEvent) => {
+            const key = e.key.toLowerCase();
+
+            if (key === 'y' || e.key === 'ArrowRight') {
+                handleAnswer(true);
+            } 
+            else if (key === 'n' || e.key === 'ArrowLeft') {
+                handleAnswer(false);
+            }
+        };
+
+        window.addEventListener('keydown', handleKey);
+
+        return () => window.removeEventListener('keydown', handleKey);
+    }, [phase, handleAnswer]);
     
     return {
         isGameActive: phase === 'PLAYING',

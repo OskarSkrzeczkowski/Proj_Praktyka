@@ -108,6 +108,19 @@ const handleReaction = () => {
         }
     };
 
+    useEffect(() => {
+        if (phase !== 'SIGNAL' && phase !== 'WAITING') return;
+    
+        const handleKey = (e: KeyboardEvent) => {
+            if(e.code === 'Space'){
+                handleReaction();
+            }
+        }
+        window.addEventListener('keydown', handleKey);
+
+        return () => window.removeEventListener('keydown', handleKey);
+    },[phase, handleReaction])
+
   return {
         isGameActive: phase !== 'IDLE' && phase !=='GAMEOVER',
         isGameOver: phase === 'GAMEOVER',
