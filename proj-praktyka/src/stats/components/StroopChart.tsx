@@ -19,12 +19,12 @@ export const StroopChart = ({ data: rawData }: StroopChartProps) => {
   }
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height={250}>
       <LineChart data={chartData} margin={{ bottom: 30, right: 50, left: 10 }}>
         <XAxis dataKey="date" stroke="#ffffff60" minTickGap={40} interval={0} dy={35} height={60} angle={-30} />
         <YAxis stroke="#ffffff60" tickFormatter={(value) => `${value}%`} />
         <Tooltip
-            contentStyle={{ backgroundColor: '#155daf', border:'1px solid #ffffff', borderRadius:'10px', justifyContent:'center', padding:'4px'}}
+            contentStyle={{ backgroundColor: '#09205e', border:'none', borderRadius:'10px', justifyContent:'center'}}
             formatter={(value: any, name: any): [string, string] => {
                 const val = value !== undefined && value !== null ? value : 0;
 

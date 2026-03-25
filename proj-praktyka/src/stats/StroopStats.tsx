@@ -34,7 +34,7 @@ const StroopStats = () => {
         ? Math.round(filteredHistory.reduce((acc, s) => acc + s.avgReactionTime, 0) / filteredHistory.length)
         : 0;
 return (
-    <div className="mt-6 border-6 border-white/60 rounded-lg py-4">
+    <div className="mt-6 border-6 border-white/60 rounded-4xl py-4 bg-white/10 w-200">
         <h2 className="text-3xl font-bold mb-4 text-blue-400 flex justify-center items-center mt-4">Twoje wyniki w grze Stroop</h2>
       
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center px-20 my-10">
@@ -85,7 +85,7 @@ return (
         <div className="px-10 pb-6">
             <div className="bg-white/30 p-6 rounded-2xl border border-white/10">
                 <h3 className="text-xl font-semibold mb-6 text-white/80">Trend skuteczności</h3>
-                <div className="h-[300px] w-full">
+                <div className="h-64 w-full">
                     <StroopChart data={filteredHistory} />
                 </div>
             </div>

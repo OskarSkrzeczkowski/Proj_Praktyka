@@ -10,6 +10,7 @@ import Reaction from './games/ReactionTimes/ReactionTime';
 import NBack from './games/NBack/NBack.tsx';
 import Stats from './stats/Stats.tsx'
 import { useSessionStore } from './store/sessionStore.tsx';
+import { Particles } from './stats/components/Particles.tsx';
 
 
 function Home() {
@@ -23,12 +24,14 @@ function Home() {
       
 
       return(
+        <div className="relative min-h-screen w-full">
+            <Particles />
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
               <motion.div 
                 initial={{ opacity: 0 }} 
-                animate={{ opacity: 1 }} 
+                animate={{ opacity: [0, 0.5, 1] }} 
                 exit={{ opacity: 0 }}
                 className="flex flex-col justify-center items-center min-h-screen w-full p-5"
               >
@@ -89,7 +92,8 @@ function Home() {
             <Route path="/Stats" element={<Stats />} />
           </Routes>
         </AnimatePresence>
+        </div>
       );
-    }
+    };
 
 export default Home;

@@ -107,8 +107,7 @@ export function useNBackGame() {
         const timeTaken = Math.round(now - lastStepTimestamp);
         setReactionTimes(prev => [...prev, timeTaken]);
 
-        const targetSymbol = history[history.length - nLevel];
-        const isActualMatch = currentSymbol === targetSymbol;
+        const isActualMatch = history.length > nLevel && currentSymbol === history[history.length - (nLevel + 1)];
 
         if (userClaimedMatch === isActualMatch) {
             setCorrect(prev => prev + 1);
