@@ -11,6 +11,7 @@ interface SessionState {
 
     clearStroopHistory: () => void;
     clearReactionHistory: () => void;
+    clearNBackHistory: () => void;
 
     addStroopResult: (result: Omit<StroopResult, 'id' | 'date'>) => void;
     addReactionResult: (result: Omit<ReactionResult, 'id' | 'date'>) => void;
@@ -26,6 +27,7 @@ export const useSessionStore = create<SessionState>()(
 
         clearStroopHistory: () => set({ stroopHistory: [] }),
         clearReactionHistory: () => set({ reactionHistory: [] }),
+        clearNBackHistory: () => set({ nbackHistory: [] }),
 
         addStroopResult: (result) => set((state) => ({
             stroopHistory: [

@@ -1,3 +1,4 @@
+import NBackStats from './NBackStats';
 import ReactionStats from './ReactionStats';
 import StroopStats from './StroopStats';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +17,7 @@ function Stats() {
         </div>
       <StroopStats />
       <ReactionStats /> 
+      <NBackStats />
       </div>
   );
 }

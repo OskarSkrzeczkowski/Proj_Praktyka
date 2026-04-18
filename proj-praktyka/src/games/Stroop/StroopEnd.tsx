@@ -1,4 +1,3 @@
-import type{ ReactionInter } from "../../hooks/useStroopGame";
 import { formatMs } from '../../utils/format';
 
 interface EndProps {

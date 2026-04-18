@@ -24,18 +24,18 @@ const ReactionStats = () => {
     : 0;
 
     const totalAvg = filteredHistory.length > 0
-    ? Math.round(reactionHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
+    ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
     : 0;
 
-    const totalAttempts = filteredHistory.reduce((acc, session) => acc + session.attempts.length, 0);
-
-    const totalMisses = filteredHistory.reduce((acc, session) => acc + session.misses, 0);
+    const maxMisses = filteredHistory.length > 0
+    ? Math.max(...filteredHistory.map(session => session.misses))
+    : 0;
 
 return (
     <div className="mt-6 border-6 border-white/60 rounded-4xl py-4 bg-white/10 w-200">
         <h2 className="text-3xl font-bold mb-4 text-blue-400 flex justify-center items-center mt-4">Twoje wyniki w grze ReactionTimes</h2>
       
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center px-20 my-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 justify-center px-10 my-10">
             <StatCard 
                 label="Najlepszy czas" 
                 value={bestAllTime} 
@@ -49,14 +49,8 @@ return (
                 color="text-blue-400" 
             />
             <StatCard 
-                label="Wszystkie kliknięcia" 
-                value={totalAttempts} 
-                unit="" 
-                color="text-green-400" 
-            />
-            <StatCard 
-                label="Ilość zaników" 
-                value={totalMisses} 
+                label="Najwięcej zaników" 
+                value={maxMisses} 
                 unit="" 
                 color="text-red-400" 
             />

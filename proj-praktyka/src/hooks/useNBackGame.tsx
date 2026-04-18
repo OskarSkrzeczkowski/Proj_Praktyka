@@ -26,7 +26,7 @@ export function useNBackGame() {
     ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) 
     : 0;
 
-    const canAnswer = history.length >= nLevel;
+    const canAnswer = history.length > nLevel;
 
     const feedbackMain = (text: string) => {
         setFeedback(text);
@@ -69,6 +69,7 @@ export function useNBackGame() {
 
     const startGame = (seconds: number, level: number) => {
         const now = Date.now();
+        const startChar = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
         setStartTime(now);
         setTotalTime(seconds);
         setTimeLeft(seconds);
@@ -76,21 +77,17 @@ export function useNBackGame() {
         setCorrect(0);
         setIncorrect(0);
         setStreak(0);
-        setHistory([]);
+        setHistory([startChar]);
         setPhase('PLAYING');
         setReactionTimes([]);
         setBestStreak(0);
-        setBestStreak(0);
         setIsProcessing(false);
-
-        const startChar = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
         setCurrentSymbol(startChar);
     };
 
     useEffect(() => {
         if (phase !== 'PLAYING' || isProcessing) return;
-
-        if (history.length < nLevel) {
+        if (history.length <= nLevel) {
             const timer = setTimeout(() => {
                 nextStep();
             }, 1200);
@@ -108,14 +105,11 @@ export function useNBackGame() {
         setReactionTimes(prev => [...prev, timeTaken]);
 
         const isActualMatch = history.length > nLevel && currentSymbol === history[history.length - (nLevel + 1)];
-
         if (userClaimedMatch === isActualMatch) {
             setCorrect(prev => prev + 1);
             setStreak(prev => {
             const newStreak = prev + 1;
-            if (newStreak > bestStreak) {
-                setBestStreak(newStreak);
-            }
+            setBestStreak((bestPrev) => Math.max(bestPrev, newStreak));
             return newStreak;
             });
             feedbackMain("Dobrze!");

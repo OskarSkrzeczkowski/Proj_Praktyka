@@ -21,23 +21,21 @@ const StroopStats = () => {
     const hasData = filteredHistory.length > 0;
 
     const bestEfficiency = hasData 
-        ? Math.max(...filteredHistory.map(s => s.efficiency)) 
+        ? Math.max(...filteredHistory.map(session => session.efficiency)) 
         : 0;
 
     const avgInterference = hasData
-        ? Math.round(filteredHistory.reduce((acc, s) => acc + s.interference, 0) / filteredHistory.length)
+        ? Math.round(filteredHistory.reduce((acc, session) => acc + session.interference, 0) / filteredHistory.length)
         : 0;
 
-    const totalScore = filteredHistory.reduce((acc, s) => acc + s.score, 0);
-
     const avgTime = hasData
-        ? Math.round(filteredHistory.reduce((acc, s) => acc + s.avgReactionTime, 0) / filteredHistory.length)
+        ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
         : 0;
 return (
     <div className="mt-6 border-6 border-white/60 rounded-4xl py-4 bg-white/10 w-200">
         <h2 className="text-3xl font-bold mb-4 text-blue-400 flex justify-center items-center mt-4">Twoje wyniki w grze Stroop</h2>
       
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-center px-20 my-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 justify-center px-10 my-10">
             <StatCard 
                 label="Najlepsza skuteczność" 
                 value={bestEfficiency} 
@@ -45,16 +43,10 @@ return (
                 color="text-yellow-400" 
             />
             <StatCard 
-                label="Średni czas inteferencji" 
+                label="Średni czas interferencji" 
                 value={avgInterference} 
                 unit="ms" 
                 color="text-blue-400" 
-            />
-            <StatCard 
-                label="Suma punktów" 
-                value={totalScore} 
-                unit="pkt" 
-                color="text-green-400" 
             />
             <StatCard 
                 label="Średni czas reakcji" 
