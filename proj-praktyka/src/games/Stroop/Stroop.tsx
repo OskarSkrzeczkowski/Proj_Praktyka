@@ -47,10 +47,6 @@ function Stroop() {
         game.startGame(seconds);
     };
 
-    // Obliczanie sumy wszystkich kliknięć oraz skuteczność
-    const totalAnswers = game.score + game.errors;
-    const efficiencyValue = totalAnswers === 0 ? 0 : Math.round((game.score / totalAnswers) * 100);
-
     return (
         //Animacja przejść między podstronami
         <motion.div

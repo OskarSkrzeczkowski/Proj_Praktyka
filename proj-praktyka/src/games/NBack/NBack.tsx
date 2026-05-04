@@ -57,7 +57,6 @@ function NBack() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}>
                         <NBackGame
-                            timeLeft={game.timeLeft}
                             totalTime={game.totalTime}
                             formattedTime={formatTime(game.timeLeft)}
                             correct={game.correct}
