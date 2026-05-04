@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 type GamePhase = 'IDLE' | 'PLAYING' | 'GAMEOVER';
 const SYMBOLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -24,9 +24,11 @@ export function useNBackGame() {
 
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const avgTime = reactionTimes.length > 0 
-    ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) 
-    : 0;
+    const avgTime = useMemo(() => {
+        return reactionTimes.length > 0 
+            ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) 
+            : 0;
+    }, [reactionTimes]);
 
     const canAnswer = history.length > nLevel;
 

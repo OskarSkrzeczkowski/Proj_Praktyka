@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { ColorOption } from '../games/Stroop/Stroop';
 
 const COLORS: ColorOption[] = [
@@ -32,22 +32,27 @@ export function useStroopGame() {
   const totalAnswers = score + errors;
   const efficiencyValue = totalAnswers === 0 ? 0 : Math.round((score / totalAnswers) * 100);
 
-  const avgTime = reactionTimes.length > 0 
-    ? Math.round(reactionTimes.reduce((a, b) => a + b.time, 0) / reactionTimes.length) 
-    : 0;
+    const { avgTime, interference, congruentCount, incongruentCount } = useMemo(() => {
 
-  const congruent = reactionTimes.filter(r => r.wasCongruent);
-  const incongruent = reactionTimes.filter(r => !r.wasCongruent);
+        const avgTime = reactionTimes.length > 0 
+            ? Math.round(reactionTimes.reduce((a, b) => a + b.time, 0) / reactionTimes.length) 
+            : 0;
 
-  const avgCongruent = congruent.length > 0
-    ? congruent.reduce((a, b) => a + b.time, 0) / congruent.length
-    : 0;
+        const congruent = reactionTimes.filter(r => r.wasCongruent);
+        const incongruent = reactionTimes.filter(r => !r.wasCongruent);
 
-  const avgIncongruent = incongruent.length > 0
-    ? incongruent.reduce((a, b) => a + b.time, 0) / incongruent.length
-    : 0;
+        const avgCongruent = congruent.length > 0
+            ? congruent.reduce((a, b) => a + b.time, 0) / congruent.length
+            : 0;
 
-  const interference = Math.round(avgIncongruent - avgCongruent);
+        const avgIncongruent = incongruent.length > 0
+            ? incongruent.reduce((a, b) => a + b.time, 0) / incongruent.length
+            : 0;
+
+        const interference = Math.round(avgIncongruent - avgCongruent);
+
+        return { avgTime, interference, congruentCount: congruent.length, incongruentCount: incongruent.length };
+    }, [reactionTimes]);
 
   useEffect(() => {
     let timer: number;
@@ -153,8 +158,8 @@ const handleAnswer = (clickedName: string) => {
     avgTime,
     interference,
     efficiencyValue,
-    congruentCount: congruent.length,
-    incongruentCount: incongruent.length,
+    congruentCount,
+    incongruentCount,
     reactionTimes,
     currentWord,
     currentColor,

@@ -3,27 +3,35 @@ import { StatCard } from './components/StatCard';
 import { useState } from 'react';
 import { NBackChart } from './components/NBackChart';
 import { filterByDays } from '../utils/filter';
+import { useMemo } from 'react';
 
 const NBackStats = () => {
     const { nbackHistory, clearNBackHistory } = useSessionStore();
     const [daysFilter, setDaysFilter] = useState(7);
     const [levelFilter, setLevelFilter] = useState(1);
 
-    const filteredHistory = filterByDays(nbackHistory, daysFilter);
+    const { filteredHistory, bestEfficiency, avgTime, maxStreak } = useMemo(() => {
 
-const hasData = filteredHistory.length > 0;
+        const filteredHistory = filterByDays(nbackHistory, daysFilter)
+            .filter(session => session.nLevel === levelFilter);
 
-    const bestEfficiency = hasData 
-        ? Math.max(...filteredHistory.map(session => session.efficiency)) 
-        : 0;
+        const hasData = filteredHistory.length > 0;
 
-    const avgTime = hasData
-        ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
-        : 0;
+        const bestEfficiency = hasData 
+            ? Math.max(...filteredHistory.map(session => session.efficiency)) 
+            : 0;
 
-    const maxStreak = hasData
-        ? Math.max(...filteredHistory.map(session => session.bestStreak))
-        : 0;
+        const avgTime = hasData
+            ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
+            : 0;
+
+        const maxStreak = hasData
+            ? Math.max(...filteredHistory.map(session => session.bestStreak))
+            : 0;
+
+        return { filteredHistory, bestEfficiency, avgTime, maxStreak};
+    }, [nbackHistory, daysFilter, levelFilter]);
+
 return (
     <div className="mt-6 border-2 border-white/60 rounded-4xl py-4 bg-green-600/50 w-200">
         <h2 className="text-3xl font-bold mb-4 text-white/60 flex justify-center items-center mt-4">Twoje wyniki N-Back</h2>

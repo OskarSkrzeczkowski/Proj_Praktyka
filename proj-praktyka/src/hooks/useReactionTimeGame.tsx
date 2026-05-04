@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
 type GamePhase = 'IDLE' | 'WAITING' | 'SIGNAL' | 'GAMEOVER' | 'COOLDOWN';
 
@@ -14,17 +14,21 @@ export function useReactionTime() {
     const [feedback, setFeedback] = useState<string | null>(null);
     const [gameStartTime, setGameStartTime] = useState<number | null>(null);
 
-    const validTrials = trials.filter(t => t>  0);
-    const avgTime = validTrials.length > 0 
-      ? Math.round(validTrials.reduce((a, b) => a + b, 0) / validTrials.length) 
-      : 0;
+    const { score, avgTime, bestTime } = useMemo(() => {
+        const validTrials = trials.filter(t => t > 0);
     
-    const score = trials.length;
+        const avgTime = validTrials.length > 0 
+            ? Math.round(validTrials.reduce((a, b) => a + b, 0) / validTrials.length) 
+            : 0;
+    
+        const bestTime = validTrials.length > 0 
+            ? Math.min(...validTrials) 
+            : 0;
 
-    const bestTime = validTrials.length > 0 ? Math.min(...validTrials) : 0;
+        return { score: trials.length, avgTime, bestTime };
+    }, [trials]);
 
     const feedbackMain = (text: string) => {
-
       setFeedback(text);
       setTimeout(() => setFeedback(null), 800);
     };

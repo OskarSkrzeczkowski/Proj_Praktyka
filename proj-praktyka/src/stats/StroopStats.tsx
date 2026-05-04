@@ -3,26 +3,33 @@ import { StatCard } from './components/StatCard';
 import { StroopChart } from './components/StroopChart';
 import { useState } from 'react';
 import { filterByDays } from '../utils/filter';
+import { useMemo } from 'react';
 
 const StroopStats = () => {
     const { stroopHistory, clearStroopHistory } = useSessionStore();
     const [daysFilter, setDaysFilter] = useState(7);
 
-    const filteredHistory = filterByDays(stroopHistory, daysFilter);
+    const { filteredHistory, bestEfficiency, avgInterference, avgTime } = useMemo(() => {
+    
+        const filteredHistory = filterByDays(stroopHistory, daysFilter);
 
-    const hasData = filteredHistory.length > 0;
+        const hasData = filteredHistory.length > 0;
 
-    const bestEfficiency = hasData 
-        ? Math.max(...filteredHistory.map(session => session.efficiency)) 
-        : 0;
+        const bestEfficiency = hasData 
+            ? Math.max(...filteredHistory.map(session => session.efficiency)) 
+            : 0;
 
-    const avgInterference = hasData
-        ? Math.round(filteredHistory.reduce((acc, session) => acc + session.interference, 0) / filteredHistory.length)
-        : 0;
+        const avgInterference = hasData
+            ? Math.round(filteredHistory.reduce((acc, session) => acc + session.interference, 0) / filteredHistory.length)
+            : 0;
 
-    const avgTime = hasData
-        ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
-        : 0;
+        const avgTime = hasData
+            ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
+            : 0;
+
+        return { filteredHistory, bestEfficiency, avgInterference, avgTime };
+    }, [stroopHistory, daysFilter]);
+
 return (
     <div className="mt-6 border-2 border-white/60 rounded-4xl py-4 bg-red-500/60 w-200">
         <h2 className="text-3xl font-bold mb-4 text-white/80 flex justify-center items-center mt-4">Twoje wyniki - Stroop</h2>

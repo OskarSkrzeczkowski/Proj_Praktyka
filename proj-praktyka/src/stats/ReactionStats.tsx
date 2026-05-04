@@ -3,23 +3,30 @@ import { StatCard } from './components/StatCard';
 import { useState } from 'react';
 import { ReactionChart } from './components/ReactionChart';
 import { filterByDays } from '../utils/filter';
+import { useMemo } from 'react';
 
 const ReactionStats = () => {
     const { reactionHistory, clearReactionHistory } = useSessionStore();
     const [daysFilter, setDaysFilter] = useState(7);
 
-    const filteredHistory = filterByDays(reactionHistory, daysFilter);
-    const bestAllTime = filteredHistory.length > 0
-    ? Math.min(...filteredHistory.map(session => session.bestReactionTime))
-    : 0;
+    const { filteredHistory, bestAllTime, totalAvg, maxMisses } = useMemo(() => {
+    
+        const filteredHistory = filterByDays(reactionHistory, daysFilter);
+    
+        const bestAllTime = filteredHistory.length > 0
+            ? Math.min(...filteredHistory.map(session => session.bestReactionTime))
+            : 0;
 
-    const totalAvg = filteredHistory.length > 0
-    ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
-    : 0;
+        const totalAvg = filteredHistory.length > 0
+            ? Math.round(filteredHistory.reduce((acc, session) => acc + session.avgReactionTime, 0) / filteredHistory.length)
+            : 0;
 
-    const maxMisses = filteredHistory.length > 0
-    ? Math.max(...filteredHistory.map(session => session.misses))
-    : 0;
+        const maxMisses = filteredHistory.length > 0
+            ? Math.max(...filteredHistory.map(session => session.misses))
+            : 0;
+
+        return { filteredHistory, bestAllTime, totalAvg, maxMisses };
+    }, [reactionHistory, daysFilter]);
 
 return (
     <div className="mt-6 border-2 border-white/60 rounded-4xl py-4 bg-blue-700/69 w-200">
