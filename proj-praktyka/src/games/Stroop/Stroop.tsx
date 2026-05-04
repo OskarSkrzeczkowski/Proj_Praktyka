@@ -29,7 +29,7 @@ function Stroop() {
                 duration: DURATION_MAP[selectedDuration] ?? 60,
                 score: game.score,
                 errors: game.errors,
-                efficiency: efficiencyValue,
+                efficiency: game.efficiencyValue,
                 avgReactionTime: game.avgTime,
                 interference: game.interference,
             })
@@ -70,7 +70,7 @@ function Stroop() {
                         <StroopGame
                             {...game}
                             formattedTime={formatTime(game.timeLeft)}
-                            efficiency={formatPercent(efficiencyValue)}
+                            efficiency={formatPercent(game.efficiencyValue)}
                             onExit={game.exitGame}
                             onAnswer={game.handleAnswer}
                         /></motion.div>
@@ -83,7 +83,7 @@ function Stroop() {
                         <StroopEnd
                             score={game.score}
                             errors={game.errors}
-                            efficiency={formatPercent(efficiencyValue)}
+                            efficiency={formatPercent(game.efficiencyValue)}
                             avgTime={game.avgTime}
                             interference={game.interference}
                             congruentCount={game.congruentCount}

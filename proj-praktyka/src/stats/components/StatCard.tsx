@@ -13,7 +13,7 @@ export const StatCard = ({
 }: StatCardProps) => {
 
   return (
-    <div className="bg-white/10 border-4 border-white/60 border-4 rounded-2xl p-6 flex flex-col items-center justify-center min-w-[150px]">
+    <div className="bg-white/10 border-2 border-white/60 rounded-4xl p-6 flex flex-col items-center justify-center min-w-[150px]">
       
       <p className="text-white/60 text-center mb-2">{label}</p>
     

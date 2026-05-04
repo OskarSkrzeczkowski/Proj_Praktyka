@@ -20,6 +20,8 @@ export function useNBackGame() {
     const [bestStreak, setBestStreak] = useState(0);
     const [lastStepTimestamp, setLastStepTimestamp] = useState(0);
 
+    const [stepIndex, setStepIndex] = useState(0);
+
     const [isProcessing, setIsProcessing] = useState(false);
 
     const avgTime = reactionTimes.length > 0 
@@ -42,6 +44,7 @@ export function useNBackGame() {
         } else {
             newSymbol = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
         }
+        setStepIndex(prev => prev + 1);
         setHistory(prev => [...prev, newSymbol]);
         setCurrentSymbol(newSymbol);
         setLastStepTimestamp(performance.now());
@@ -95,7 +98,7 @@ export function useNBackGame() {
         }
     }, [history.length, phase, nLevel, nextStep, isProcessing]);
 
-    const handleAnswer = (userClaimedMatch: boolean) => {
+    const handleAnswer = useCallback((userClaimedMatch: boolean) => {
         if (phase !== 'PLAYING' || !canAnswer || isProcessing) return;
 
         setIsProcessing(true);
@@ -123,7 +126,7 @@ export function useNBackGame() {
             nextStep();
             setIsProcessing(false);
         }, 600);
-    }
+    }, [phase, canAnswer, isProcessing, lastStepTimestamp, currentSymbol, history, nLevel, nextStep]);
 
     useEffect(() => {
         if (phase !== 'PLAYING') return;
@@ -158,6 +161,7 @@ export function useNBackGame() {
         bestStreak,
         efficiency: (correct + incorrect) === 0 ? 0 : Math.round((correct / (correct + incorrect)) * 100),
         canAnswer,
+        stepIndex,
         handleAnswer,
         startGame,
         exitGame: () => setPhase('IDLE')

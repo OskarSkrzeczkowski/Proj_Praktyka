@@ -3,7 +3,6 @@ import {motion, AnimatePresence} from 'framer-motion';
 import { TimeBar } from '../../components/TimeBar';
 
 interface GameProps {
-  timeLeft: number;
   totalTime: number;
   formattedTime: string;
   score: number;
@@ -15,8 +14,7 @@ interface GameProps {
   onAnswer: () => void;
 }
 
-export const ReactionGame = ({
-timeLeft, totalTime, formattedTime, score, avgTime, losses, displayTime, feedback, onExit, onAnswer
+export const ReactionGame = ({ totalTime, formattedTime, score, avgTime, losses, displayTime, feedback, onExit, onAnswer
 }: GameProps) => {
 
     const counter = displayTime > 0 
@@ -36,9 +34,9 @@ timeLeft, totalTime, formattedTime, score, avgTime, losses, displayTime, feedbac
         </div>
       </div>
 
-      <TimeBar timeLeft={timeLeft} totalTime={totalTime} />
+        <TimeBar totalTime={totalTime} />
 
-            <div className="absolute top-50 left-0 right-0 flex flex-col items-center">
+      <div className="absolute top-50 left-0 right-0 flex flex-col items-center">
         <div className="flex gap-8">
           <span>Próby: <span className="text-green-400 font-bold">{score}</span></span>
           <span>Średni czas reakcji: <span className="text-red-400 font-bold">{avgTime}</span></span>

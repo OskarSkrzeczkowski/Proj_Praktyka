@@ -2,7 +2,6 @@ import { TimeBar } from '../../components/TimeBar'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface GameProps {
-  timeLeft: number;
   totalTime: number;
   formattedTime: string;
   correct: number;
@@ -10,14 +9,14 @@ interface GameProps {
   efficiency: number;
   series: number;
   currentSymbol: string | null;
+  stepIndex: number;
   feedback: string | null;
   onExit: () => void;
   onAnswer: (match: boolean) => void;
 }
 
-export const NBackGame = ({
-  timeLeft, totalTime, formattedTime, correct, incorrect, 
-  efficiency, series, currentSymbol, feedback, onExit, onAnswer
+export const NBackGame = ({ totalTime, formattedTime, correct, incorrect, 
+  efficiency, series, currentSymbol, stepIndex,feedback, onExit, onAnswer
 }: GameProps) => {
 
     return (
@@ -32,7 +31,7 @@ export const NBackGame = ({
         </div>
       </div>
 
-      <TimeBar timeLeft={timeLeft} totalTime={totalTime} />
+      <TimeBar totalTime={totalTime} />
 
       <div className="absolute top-50 left-0 right-0 flex flex-col items-center">
         <div className="flex gap-8">
@@ -47,7 +46,7 @@ export const NBackGame = ({
         <div className="relative h-40 flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.h1 
-              key={currentSymbol}
+              key={stepIndex}
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 1.5, opacity: 0 }}

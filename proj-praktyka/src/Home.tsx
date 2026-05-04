@@ -78,12 +78,12 @@ function Home() {
                     />
                   </div>
                 </div>
+                <div className="py-4">
+                    <Link to="/Stats" className="text-white border-2 rounded-lg p-2 bg-white/20">Statystyki</Link>
+                </div>
                 <footer>
                   <p className="text-white/80 italic m-4">To nie jest test. Nie oceniaj wyniku – liczy się wejście w stan.</p>
                 </footer>
-                <div>
-                    <Link to="/Stats" className="text-white border-4 rounded-lg p-2 bg-white/20">Statystyki</Link>
-                </div>
               </motion.div>
             } />
             <Route path="/Stroop" element={<Stroop />} />

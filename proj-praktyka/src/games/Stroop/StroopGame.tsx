@@ -3,7 +3,6 @@ import type { ColorOption } from './Stroop';
 import { motion } from 'framer-motion'
 
 interface GameProps {
-  timeLeft: number;
   totalTime: number;
   formattedTime: string;
   currentWord: ColorOption;
@@ -16,8 +15,7 @@ interface GameProps {
   onAnswer: (colorName: string) => void;
 }
 
-export const StroopGame = ({ 
-  timeLeft, totalTime, formattedTime, currentWord, 
+export const StroopGame = ({ totalTime, formattedTime, currentWord, 
   currentColor, COLORS, score, errors, efficiency, onExit, onAnswer 
 }: GameProps) => {
   return (
@@ -31,7 +29,7 @@ export const StroopGame = ({
         </div>
       </div>
       
-      <TimeBar timeLeft={timeLeft} totalTime={totalTime} />
+      <TimeBar totalTime={totalTime} />
       
       <div className="flex flex-col items-center gap-12">
         <div className="flex gap-8">

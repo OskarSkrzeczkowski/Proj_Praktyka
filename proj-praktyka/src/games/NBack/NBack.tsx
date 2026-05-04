@@ -65,6 +65,7 @@ function NBack() {
                             efficiency={game.efficiency}
                             series={game.streak}
                             currentSymbol={game.currentSymbol}
+                            stepIndex={game.stepIndex}
                             onExit={game.exitGame}
                             feedback={game.feedback}
                             onAnswer={game.handleAnswer}

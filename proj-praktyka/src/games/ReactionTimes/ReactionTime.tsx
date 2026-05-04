@@ -54,7 +54,6 @@ function Reaction() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}>
                         <ReactionGame
-                            timeLeft={game.timeLeft}
                             totalTime={game.totalTime}
                             formattedTime={formatTime(game.timeLeft)}
                             score={game.score}
