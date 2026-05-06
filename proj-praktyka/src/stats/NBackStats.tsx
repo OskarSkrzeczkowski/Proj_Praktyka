@@ -5,6 +5,10 @@ import { NBackChart } from './components/NBackChart';
 import { filterByDays } from '../utils/filter';
 import { useMemo } from 'react';
 
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Button from '@mui/material/Button';
+
 const NBackStats = () => {
     const { nbackHistory, clearNBackHistory } = useSessionStore();
     const [daysFilter, setDaysFilter] = useState(7);
@@ -57,37 +61,89 @@ return (
             />
         </div>
 
-        <div className="flex justify-center gap-2 mb-8">
-            {[1, 7, 14, 30].map((days) => (
-                <button
-                    key={days}
-                    onClick={() => setDaysFilter(days)}
-                    className={`px-4 py-1 rounded-4xl border transition-all cursor-pointer ${
-                        daysFilter === days 
-                            ? 'bg-blue-500 border-blue-400 text-white' 
-                            : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10'
-                    }`}
-                >
-                    {days === 1 ? 'Dziś' : `${days} dni`}
-                </button>
-            ))}
-            <button className="bg-white/5 border-2 border-white/10 text-white/50 hover:bg-white/10 flex ml-12 justify-center items-center rounded-4xl px-4 py-1 cursor-pointer" onClick={clearNBackHistory}>Wyczyść historię</button>
+                <div className="flex justify-center gap-2 mb-8">
+            <ToggleButtonGroup
+                value={daysFilter}
+                exclusive
+                onChange={(_event, newValue) => {
+                    if (newValue !== null) {
+                        setDaysFilter(newValue);
+                    }
+                }}
+                sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '24px',
+                    '& .MuiToggleButton-root': {
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        textTransform: 'none',
+                        padding: '4px 16px',
+                        '&.Mui-selected': {
+                            backgroundColor: '#3b82f6',
+                            color: 'white',
+                        },
+                        '&.Mui-selected:hover': {
+                            backgroundColor: '#2563eb', 
+                        }
+                    }
+                }}
+            >
+            <ToggleButton value={1} sx={{ borderRadius: '24px 0 0 24px' }}>Dziś</ToggleButton>
+            <ToggleButton value={7}>7 dni</ToggleButton>
+            <ToggleButton value={14}>14 dni</ToggleButton>
+            <ToggleButton value={30} sx={{ borderRadius: '0 24px 24px 0' }}>30 dni</ToggleButton>
+            </ToggleButtonGroup>
+
+            <Button 
+                variant="outlined" 
+                color="error" 
+                onClick={clearNBackHistory}
+                sx={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '24px', 
+                    textTransform: 'none',
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    '&:hover': {
+                        color: 'rgba(255,255,255,0.7)'
+                    }
+                }}
+            >
+                Wyczyść historię
+            </Button>
         </div>
 
         <div className="flex justify-center gap-2 mb-8">
-            {[1,2,3].map((level) => (
-                <button
-                    key={level}
-                    onClick={() => setLevelFilter(level)}
-                    className={`px-4 py-1 rounded-4xl border transition-all cursor-pointer ${
-                        levelFilter === level 
-                            ? 'bg-blue-500 border-blue-400 text-white' 
-                            : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10'
-                    }`}
-                >
-                    {level}-NBack
-                </button>
-            ))}
+            <ToggleButtonGroup
+                value={levelFilter}
+                exclusive
+                onChange={(_event, newValue) => {
+                    if (newValue !== null) {
+                        setLevelFilter(newValue);
+                    }
+                }}
+                sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    borderRadius: '24px',
+                    '& .MuiToggleButton-root': {
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        textTransform: 'none',
+                        padding: '4px 16px',
+                        '&.Mui-selected': {
+                            backgroundColor: '#3b82f6', // Niebieski dla aktywnego
+                            color: 'white',
+                        },
+                        '&.Mui-selected:hover': {
+                        backgroundColor: '#2563eb',
+                        }
+                    }
+                }}
+            >
+            <ToggleButton value={1} sx={{ borderRadius: '24px 0 0 24px' }}>1-NBack</ToggleButton>
+            <ToggleButton value={2}>2-NBack</ToggleButton>
+            <ToggleButton value={3} sx={{ borderRadius: '0 24px 24px 0' }}>3-NBack</ToggleButton>
+            </ToggleButtonGroup>
         </div>
 
         <div className="px-10 pb-6">

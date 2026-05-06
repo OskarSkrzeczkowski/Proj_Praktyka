@@ -1,5 +1,6 @@
 import { TimeList } from '../../components/TimeList'
 import { LevelList } from '../../components/LevelList'
+import Button from '@mui/material/Button';
 
 
 interface MenuProps {
@@ -19,12 +20,24 @@ export const NBackMenu = ({selectedDuration, setSelectedDuration, selectedLevel,
         <div>
           <div className="flex gap-100">
             <h2 className="text-[36px] font-bold">Tor myślenia</h2>
-            <button 
-              className="border-green-900 bg-green-700/50 font-medium border-2 rounded-lg p-2 !leading-[20px] max-w-20 justify-center items-center transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer" 
-              onClick={onBack}
+            <Button 
+                variant="outlined" 
+                color="inherit" 
+                onClick={onBack}
+                sx={{
+                    borderRadius: '8px',
+                    borderWidth: '2px',
+                    textTransform: 'none',
+                    fontWeight: 'medium',
+                    minWidth: '80px',
+                    '&:hover': {
+                        borderWidth: '2px',
+                        transform: 'scale(1.05)'
+                    }
+                }}
             >
-              Wróć
-            </button>
+                Wróć
+            </Button>
           </div>
           
           <p className="text-white/75">Ustawia ciągłość myślenia i pamięć roboczą.</p>
@@ -75,12 +88,20 @@ export const NBackMenu = ({selectedDuration, setSelectedDuration, selectedLevel,
           </div>
         </div>
 
-        <button 
-          className="w-full bg-purple-700 shadow-lg border-3 border-purple-800 hover:bg-purple-600 rounded-xl h-15 flex justify-center items-center text-white font-bold text-lg cursor-pointer" 
-          onClick={onStart}
+        <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={onStart}
+            sx={{ 
+                height: 60, 
+                borderRadius: '12px', 
+                fontWeight: 'bold', 
+                fontSize: '1.125rem' 
+            }}
         >
-          Rozpocznij
-        </button>
+            Rozpocznij
+        </Button>
 
       </div>
     </div>

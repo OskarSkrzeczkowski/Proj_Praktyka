@@ -1,5 +1,6 @@
-import { TimeBar } from '../../components/TimeBar'
-import { motion, AnimatePresence } from 'framer-motion'
+import { TimeBar } from '../../components/TimeBar';
+import { motion, AnimatePresence } from 'framer-motion';
+import { GameButton } from '../../components/GameButtonTF';
 
 interface GameProps {
   totalTime: number;
@@ -81,18 +82,19 @@ export const NBackGame = ({ totalTime, formattedTime, correct, incorrect,
         </AnimatePresence>
 
         <div className="flex gap-8 w-full max-w-md">
-          <button 
-            onClick={() => onAnswer(true)}
-            className="flex-1 h-24 bg-green-900/40 border-2 border-green-500 rounded-2xl font-bold text-xl hover:bg-green-900/60 transition-all active:scale-95"
-          >
-            TAK
-          </button>
-          <button 
-            onClick={() => onAnswer(false)}
-            className="flex-1 h-24 bg-red-900/40 border-2 border-red-500 rounded-2xl font-bold text-xl hover:bg-red-900/60 transition-all active:scale-95"
-          >
-            NIE
-          </button>
+  
+            <GameButton 
+                label="TAK" 
+                variant="yes" 
+                onClick={() => onAnswer(true)} 
+            />
+
+            <GameButton 
+                label="NIE" 
+                variant="no" 
+                onClick={() => onAnswer(false)} 
+            />
+
         </div>
       </div>
     </div> 

@@ -1,3 +1,7 @@
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+
 interface StatCardProps {
   label: string;
   value?: number;
@@ -5,24 +9,31 @@ interface StatCardProps {
   color: string;
 }
 
-export const StatCard = ({ 
-  label, 
-  value, 
-  unit, 
-  color = 'text-purple-400'
-}: StatCardProps) => {
-
-  return (
-    <div className="bg-white/10 border-2 border-white/60 rounded-4xl p-6 flex flex-col items-center justify-center min-w-[150px]">
-      
-      <p className="text-white/60 text-center mb-2">{label}</p>
-    
-      <p className={`text-4xl font-bold ${color}`}>
-        {value}
-
-        {unit && <span className="text-xl ml-1 opacity-80">{unit}</span>}
-      </p>
-      
-    </div>
-  );
+export const StatCard = ({ label, value, unit, color = 'text-purple-400' }: StatCardProps) => {
+    return (
+        <Card 
+        sx={{ 
+            minWidth: 150, 
+            textAlign: 'center',
+            bgcolor: 'rgba(255, 255, 255, 0.1)', 
+            borderRadius: 2, 
+            border: '2px solid rgba(255, 255, 255, 0.6)'
+        }}
+        >
+        <CardContent sx={{ padding: '24px' }}>
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}>
+                {label}
+            </Typography>
+        
+            <Typography variant="h4" sx={{ fontWeight: 'bold' }} className={color}>
+                {value}
+                    {unit && (
+                    <Typography component="span" variant="h6" sx={{ ml: 0.5, opacity: 0.8 }}>
+                        {unit}
+                    </Typography>
+                    )}
+            </Typography>
+        </CardContent>
+        </Card>
+    );
 };
