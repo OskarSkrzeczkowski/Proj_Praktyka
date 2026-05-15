@@ -13,5 +13,10 @@ module.exports = {
   theme: {
     extend: {},
   },
+  safelist: [
+    'text-red-500', 'text-blue-500', 'text-green-500', 'text-yellow-400',
+    'bg-red-900', 'bg-blue-900', 'bg-green-900', 'bg-yellow-900',
+    'border-red-500', 'border-blue-500', 'border-green-500', 'border-yellow-500'
+  ],
   plugins: [],
 };

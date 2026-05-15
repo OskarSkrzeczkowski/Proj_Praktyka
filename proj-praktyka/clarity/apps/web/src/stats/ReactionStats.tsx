@@ -1,7 +1,7 @@
 import { useSessionStore } from '@clarity/game-logic';
 import { StatCard } from '@clarity/ui';
 import { useState } from 'react';
-import { ReactionChart } from './components/ReactionChart';
+import { ReactionChart } from '@clarity/ui';
 import { filterByDays } from '@clarity/utils';
 import { useMemo } from 'react';
 
@@ -111,7 +111,7 @@ return (
 
         <div className="px-10 pb-6">
             <div className="bg-white/30 p-6 rounded-4xl border border-white/10">
-                <h3 className="text-xl font-semibold mb-6 text-white/80">Trend skuteczności</h3>
+                <h3 className="text-xl font-semibold mb-6 text-white/80">Tempo Reakcji Poznawczej </h3>
                 <div className="h-64 w-full">
                     <ReactionChart data={filteredHistory} />
                 </div>

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Card } from './Card';
-import nbackIcon from '../assets/green2.png';
+import nbackIcon from '../../../../apps/web/src/assets/green2.png';
 
 const meta: Meta<typeof Card> = {
   title: 'Menu/Card',

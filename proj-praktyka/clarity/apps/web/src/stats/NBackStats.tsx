@@ -1,7 +1,7 @@
 import { useSessionStore } from '@clarity/game-logic';
 import { StatCard } from '@clarity/ui';
 import { useState } from 'react';
-import { NBackChart } from './components/NBackChart';
+import { NBackChart } from '@clarity/ui';
 import { filterByDays } from '@clarity/utils';
 import { useMemo } from 'react';
 

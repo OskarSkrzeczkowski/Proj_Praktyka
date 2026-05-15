@@ -13,7 +13,7 @@ export const TimeList = ({activeElement, inActiveElement, onTimeChange, currentT
       {tList.map((ListElement) => (
         <button
           key={ListElement}
-          className={`p-3 rounded-lg cursor-pointer text-white font-medium  flex justify-center items-center  rounded-[10px] w-32 h-10 transition-[transform,box-shadow] duration-300 ease-in-out
+          className={`p-3 rounded-lg cursor-pointer text-white font-medium  flex justify-center items-center  w-32 h-10 transition-[transform,box-shadow] duration-300 ease-in-out
                       ${currentTime === ListElement ? activeElement : inActiveElement}`}
           onClick={() => onTimeChange(ListElement)} 
         >

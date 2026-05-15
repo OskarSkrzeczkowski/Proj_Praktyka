@@ -3,6 +3,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -15,11 +18,18 @@ export default defineConfig(() => ({
     port: 4300,
     host: 'localhost',
   },
-  plugins: [tailwindcss(), react(), nxViteTsPaths()],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
+  plugins: [
+    tailwindcss(),
+    react(), 
+    nxViteTsPaths()
+  ],
+  
+  resolve: {
+    alias: {
+      'tailwindcss': require.resolve('tailwindcss'),
+    },
+  },
+
   build: {
     outDir: './dist',
     emptyOutDir: true,

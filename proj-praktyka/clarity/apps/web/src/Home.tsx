@@ -10,7 +10,7 @@ import Reaction from './games/ReactionTimes/ReactionTime';
 import NBack from './games/NBack/NBack';
 import Stats from './stats/Stats'
 import { useSessionStore } from '@clarity/game-logic';
-import { Particles } from './stats/components/Particles';
+import { Particles } from './Particles';
 
 
 function Home() {

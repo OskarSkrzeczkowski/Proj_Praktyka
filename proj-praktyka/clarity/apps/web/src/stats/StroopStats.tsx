@@ -1,6 +1,6 @@
 import { useSessionStore } from '@clarity/game-logic';
 import { StatCard } from '@clarity/ui';
-import { StroopChart } from './components/StroopChart';
+import { StroopChart } from '@clarity/ui';
 import { useState } from 'react';
 import { filterByDays } from '@clarity/utils';
 import { useMemo } from 'react';
