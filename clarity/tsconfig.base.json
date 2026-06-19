@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@clarity/types": ["./libs/shared/types/src/index.ts"],
+      "@clarity/utils": ["./libs/shared/utils/src/index.ts"],
+      "@clarity/ui": ["./libs/ui/src/index.ts"],
+      "@clarity/game-logic": ["./libs/game-logic/src/index.ts"]
+    },
+    "composite": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "lib": ["es2022"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2022",
+    "customConditions": ["@clarity/source"]
+  }
+}
