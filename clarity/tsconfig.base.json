@@ -4,7 +4,7 @@
       "@clarity/types": ["./libs/shared/types/src/index.ts"],
       "@clarity/utils": ["./libs/shared/utils/src/index.ts"],
       "@clarity/ui": ["./libs/ui/src/index.ts"],
-      "@clarity/game-logic": ["./libs/game-logic/src/index.ts"]
+      "@clarity/game-logic": ["./libs/game-logic/src/index.ts"],
     },
     "composite": true,
     "declarationMap": true,

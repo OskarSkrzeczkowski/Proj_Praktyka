@@ -36,7 +36,6 @@
       "plugin": "@nx/vite/plugin",
       "options": {
         "buildTargetName": "build",
-        "testTargetName": "test",
         "serveTargetName": "serve",
         "devTargetName": "dev",
         "previewTargetName": "preview",
@@ -44,6 +43,12 @@
         "typecheckTargetName": "typecheck",
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
+      }
+    },
+    {
+      "plugin": "@nx/vitest",
+      "options": {
+        "testTargetName": "test"
       }
     },
     {
@@ -87,18 +92,24 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": [
-        "api-e2e/**/*",
-        "apps/api-e2e/**/*",
-        "apps/api-e2e/**/*",
-        "apps/api-e2e/**/*",
-        "apps/api-e2e/**/*"
-      ]
+      "exclude": ["apps/api-e2e/**/*"]
     }
   ],
   "targetDefaults": {
     "test": {
       "dependsOn": ["^build"]
+    },
+    "@nx/esbuild:esbuild": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "json": "{workspaceRoot}/tsconfig.json",
+          "fields": ["extends", "files", "include"]
+        }
+      ]
     }
   },
   "generators": {

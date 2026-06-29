@@ -49,3 +49,8 @@ test-output
 
 
 storybook-static
+/generated/prisma
+
+.nx/polygraph
+.nx/self-healing
+.nx/migrate-runs

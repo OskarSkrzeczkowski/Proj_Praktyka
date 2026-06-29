@@ -1,17 +1,12 @@
-import express from 'express';
-import { corsMiddleware } from './middleware/cors';
-import sessionsRouter from './routes/sessions';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app/app.module';
 
-const app = express();
-
-app.use(express.json()); 
-app.use(corsMiddleware);
-
-app.use('/api/sessions', sessionsRouter);
-
-const port = process.env.PORT || 3333;
-const server = app.listen(port, () => {
-    console.log(`API działa na adresie http://localhost:${port}/api`);
-});
-
-server.on('error', console.error);
+async function bootstrap() {
+    const app = await NestFactory.create(AppModule);
+    app.enableCors({ origin: 'http://localhost:4200' });
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.setGlobalPrefix('api');
+    await app.listen(3333);
+}
+bootstrap();

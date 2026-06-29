@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Session {
+  id              String   @id @default(uuid())
+  gameType        String
+  score           Int?
+  errors          Int?
+  efficiency      Float?
+  avgReactionTime Int?
+  interference    Int?
+  nLevel          Int?
+  bestStreak      Int?
+  misses          Int?
+  bestReactionTime Int?
+  duration        Int
+  createdAt       DateTime @default(now())
+}
