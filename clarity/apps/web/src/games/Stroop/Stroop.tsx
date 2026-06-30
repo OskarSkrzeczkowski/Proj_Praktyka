@@ -8,7 +8,6 @@ import { useStroopGame } from '@clarity/game-logic';
 import { DURATION_MAP, formatPercent, formatTime } from '@clarity/utils';
 import { useSessionStore } from '@clarity/game-logic';
 import { saveGameSession } from '@clarity/utils';
-import { sessionsApi } from '../../api/sessionApi';
 
 function Stroop() {
     const [selectedDuration, setSelectedDuration] = useState("1 min");
@@ -17,20 +16,6 @@ function Stroop() {
     const { addStroopResult } = useSessionStore();
     const hasSaved = useRef(false);
 
-    const handleFinishGame = async (score: number, duration: number) => {
-    try {
-        console.log("Wysyłam dane...");
-
-        await sessionsApi.saveStroop({
-            score: score,
-            duration: duration,
-        });
-        
-        console.log("Dane wysłane do backendu!");
-    } catch (error) {
-        console.error("Błąd podczas wysyłania danych:", error);
-    }
-};
 
     useEffect(() => {
         if (game.isGameOver && !hasSaved.current) {
