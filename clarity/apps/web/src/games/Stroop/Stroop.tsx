@@ -36,7 +36,6 @@ function Stroop() {
         if (game.isGameOver && !hasSaved.current) {
             hasSaved.current = true;
             const duration = DURATION_MAP[selectedDuration] ?? 60;
-            handleFinishGame(game.score, duration);
 
             addStroopResult({
                 duration: duration,
@@ -58,7 +57,7 @@ function Stroop() {
                 incongruentCount: game.incongruentCount
             });
         }
-    }, [game.isGameOver, game, selectedDuration, addStroopResult, handleFinishGame]);
+    }, [game.isGameOver]);
 
     const backToMain = () => {
         hasSaved.current = false;
