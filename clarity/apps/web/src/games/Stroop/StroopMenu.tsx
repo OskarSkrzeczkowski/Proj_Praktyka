@@ -1,10 +1,6 @@
-import { GameBox, TimeList } from '@clarity/ui';
+import { GameBox, TimeList, STROOP_ASSETS } from '@clarity/ui';
+import { BackButton } from '@clarity/ui';
 import Button from '@mui/material/Button';
-import photo1 from "../../assets/one_13927766.png";
-import photo2 from "../../assets/2_13927999.png";
-import photo3 from "../../assets/3_13928041.png";
-import photo4 from "../../assets/four_13928087.png";
-
 interface MenuProps {
   selectedDuration: string;
   setSelectedDuration: (time: string) => void;
@@ -12,67 +8,73 @@ interface MenuProps {
   onBack: () => void;
 }
 
+const CONTROLS = [
+  { src: STROOP_ASSETS.photo1, label: 'Czerwony' },
+  { src: STROOP_ASSETS.photo2, label: 'Niebieski' },
+  { src: STROOP_ASSETS.photo3, label: 'Zielony' },
+  { src: STROOP_ASSETS.photo4, label: 'Żółty' },
+];
+
 export const StroopMenu = ({ selectedDuration, setSelectedDuration, onStart, onBack }: MenuProps) => {
-    return (
-        <div className="min-h-screen w-full flex items-center justify-center p-4">
-            <GameBox gameVariant="stroop" sx={{ p: '32px', m: 0, lineHeight: '40px', color: 'white' }}>
-            <div>
-                <div className="flex gap-100">
-                <h2 className="text-[36px] font-bold">Kontrola</h2>
-                <Button 
-                    variant="outlined" 
-                    color="inherit" 
-                    onClick={onBack}
-                    sx={{
-                        borderRadius: '8px',
-                        borderWidth: '2px',
-                        textTransform: 'none',
-                        fontWeight: 'medium',
-                        minWidth: '80px',
-                        '&:hover': {
-                            borderWidth: '2px',
-                            transform: 'scale(1.05)'
-                        }
-                    }}
-                >
-                    Wróć
-                </Button>
-                </div>
-                <p className="text-white/75">Aktywuje kontrolę poznawczą – skupienie na tym, co istotne.</p>
-                <h4 className="text-[24px] pb-1.5 font-medium">Zasada</h4>
-                <p className="text-white/75">Kliknij kolor czcionki, nie słowo.</p>
-                <h4 className="text-[24px] pb-1.5 font-medium">Przykład</h4>
-                <p className="text-white/75">"NIEBIESKI" na czerwono → kliknij czerwony.</p>
-            </div>
-        <div className="Time">
-            <h4 className="text-[24px] pb-1.5 font-medium">Czas trwania gry</h4>
-            <TimeList onTimeChange={setSelectedDuration} currentTime={selectedDuration } />
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center p-4">
+            <GameBox 
+                gameVariant="stroop"
+                sx={{ 
+                    p: '32px', 
+                    m: 0,   
+                    lineHeight: '40px', 
+                    color: 'white',
+                    width: '100%',
+                    maxWidth: '768px'
+                }}
+            >
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-[36px] font-bold">Kontrola</h2>
+            <BackButton onClick={onBack} />
+          </div>
+          <p className="text-white/75 mb-4">Aktywuje kontrolę poznawczą – skupienie na tym, co istotne.</p>
+          
+          <h4 className="text-[24px] pb-1.5 font-medium">Zasada</h4>
+          <p className="text-white/75">Kliknij kolor czcionki, nie słowo.</p>
+          
+          <h4 className="text-[24px] pb-1.5 font-medium">Przykład</h4>
+          <p className="text-white/75 mb-6">"NIEBIESKI" na czerwono → kliknij czerwony.</p>
         </div>
+
+        <div className="Time mb-8">
+          <h4 className="text-[24px] pb-1.5 font-medium">Czas trwania gry</h4>
+          <TimeList onTimeChange={setSelectedDuration} currentTime={selectedDuration} />
+        </div>
+
         <div className="pb-8">
-            <h4 className="text-[24px] pb-1.5 font-medium">Sterowanie</h4>
-            <div className="flex gap-8 bg-[#310606a6] text-[12px] p-4 border rounded-[15px] border-[#4e0101] border-solid items-center justify-center">
-                <p className="w-25 flex justify-center gap-1.5"><img className="h-6 w-6 relative top-2" src={photo1} alt="czerwony"/>- Czerwony</p>
-                <p className="w-25 flex justify-center gap-1.5"><img className="h-6 w-6 relative top-2" src={photo2} alt="niebieski"/>- Niebieski</p>
-                <p className="w-25 flex justify-center gap-1.5"><img className="h-6 w-6 relative top-2" src={photo3} alt="zielony"/>- Zielony</p>
-                <p className="w-25 flex justify-center gap-1.5"><img className="h-6 w-6 relative top-2" src={photo4} alt="żółty"/>- Żółty</p>
-            </div>
+          <h4 className="text-[24px] pb-1.5 font-medium">Sterowanie</h4>
+          <div className="flex flex-wrap gap-6 bg-[#310606a6] text-[12px] p-4 border rounded-[15px] border-[#4e0101] items-center justify-center">
+            {CONTROLS.map((item) => (
+              <div key={item.label} className="flex items-center gap-1.5">
+                <img className="h-6 w-6" src={item.src} alt={item.label} />
+                <span>- {item.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
+
         <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={onStart}
-            sx={{ 
-                height: 60, 
-                borderRadius: '12px', 
-                fontWeight: 'bold', 
-                fontSize: '1.125rem' 
-            }}
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={onStart}
+          sx={{ 
+            height: 60, 
+            borderRadius: '12px', 
+            fontWeight: 'bold', 
+            fontSize: '1.125rem' 
+          }}
         >
-            Rozpocznij
+          Rozpocznij
         </Button>
       </GameBox>
     </div>
-
   );
 };

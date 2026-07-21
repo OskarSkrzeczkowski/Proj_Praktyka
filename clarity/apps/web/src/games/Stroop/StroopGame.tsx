@@ -1,4 +1,4 @@
-import { TimeBar } from '@clarity/ui';
+import { GameHeader, TimeBar, GameButton } from '@clarity/ui';
 import type { ColorOption } from '@clarity/game-logic'; 
 import { motion } from 'framer-motion'
 
@@ -19,15 +19,8 @@ export const StroopGame = ({ totalTime, formattedTime, currentWord,
   currentColor, COLORS, score, errors, efficiency, onExit, onAnswer 
 }: GameProps) => {
   return (
-    <div className="fixed inset-0 flex flex-col justify-center p-6 text-white">
-      <div className="absolute top-0 left-0 right-0 w-full border-b border-white">
-        <div className="mx-auto flex justify-center h-16 gap-x-64 items-center py-4 px-8">
-          <button aria-label="Wróć do menu" onClick={onExit} className="hover:bg-gray-500 rounded-xl w-24 flex justify-center cursor-pointer">
-            <span>&larr; Wróć</span>
-          </button>
-          <div>Pozostało: <span>{formattedTime}</span></div>
-        </div>
-      </div>
+    <div className="fixed inset-0 flex flex-col justify-center p-6 text-white bg-[#4e0101]/20">
+        <GameHeader formattedTime={formattedTime} onExit={onExit} />
       
       <TimeBar totalTime={totalTime} />
       
@@ -48,15 +41,17 @@ export const StroopGame = ({ totalTime, formattedTime, currentWord,
         </motion.h2>
 
         <div className="w-full flex justify-center mt-10">
-          <div className="grid grid-cols-2 gap-4 justify-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
             {COLORS.map((colorObj) => (
-              <button
+              
+              <GameButton
                 key={colorObj.name}
+                label={colorObj.name}
+                variant="color"
+                colorClass={colorObj.btnClass}
                 onClick={() => onAnswer(colorObj.name)}
-                className={`h-24 rounded-2xl text-xl w-64 font-bold transition duration-300 hover:scale-105 cursor-pointer ${colorObj.btnClass}`}
-              >
-                {colorObj.name}
-              </button>
+              />
+              
             ))}
           </div>
         </div>

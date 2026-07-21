@@ -8,7 +8,6 @@ export interface StroopResult {
     avgReactionTime: number;
     interference: number;
 }
-
 export interface ReactionResult {
     id: string;
     date: number;
@@ -18,7 +17,6 @@ export interface ReactionResult {
     avgReactionTime: number;
     bestReactionTime: number;
 }
-
 export interface NBackResult {
     id: string;
     date: number;
@@ -46,35 +44,26 @@ export interface CreateSessionPayload {
     congruentCount?: number;
     incongruentCount?: number;
 }
-
-export enum GameType {
-    Stroop = 'stroop',
-    Reaction = 'reaction',
-    NBack = 'nback',
+export declare enum GameType {
+    Stroop = "stroop",
+    Reaction = "reaction",
+    NBack = "nback"
 }
-
-export enum GamePhase {
-    Idle = 'IDLE',
-    Playing = 'PLAYING',
-    GameOver = 'GAMEOVER',
+export declare enum GamePhase {
+    Idle = "IDLE",
+    Playing = "PLAYING",
+    GameOver = "GAMEOVER"
 }
-
-export enum Duration {
-    OneMin = '1 min',
-    OneAndHalfMin = '1.5 min',
-    TwoMin = '2 min',
-    ThreeMin = '3 min',
+export declare enum Duration {
+    OneMin = "1 min",
+    OneAndHalfMin = "1.5 min",
+    TwoMin = "2 min",
+    ThreeMin = "3 min"
 }
-
-export enum NBackLevel {
+export declare enum NBackLevel {
     One = 1,
     Two = 2,
-    Three = 3,
+    Three = 3
 }
-
-export const DURATION_MAP: Record<Duration, number> = {
-    [Duration.OneMin]: 60,
-    [Duration.OneAndHalfMin]: 90,
-    [Duration.TwoMin]: 120,
-    [Duration.ThreeMin]: 180,
-};
+export declare const DURATION_MAP: Record<Duration, number>;
+//# sourceMappingURL=types.d.ts.map

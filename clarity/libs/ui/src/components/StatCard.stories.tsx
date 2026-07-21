@@ -15,7 +15,7 @@ export const Default: Story = {
         label: 'Najlepsza skuteczność',
         value: 87,
         unit: '%',
-        color: 'text-yellow-400', 
+        color: '#facc15', 
     },
 };
 
@@ -24,7 +24,7 @@ export const Zero: Story = {
         label: 'Średni czas reakcji',
         value: 0,
         unit: 'ms',
-        color: 'text-blue-400',
+        color: '#60a5fa',
     },
 };
 
@@ -33,6 +33,6 @@ export const LongLabel: Story = {
         label: 'Bardzo długa etykieta która może się nie zmieścić i rozwalić kartę',
         value: 1111,
         unit: 'ms',
-        color: 'text-red-400',
+        color: '#f87171',
     },
 };

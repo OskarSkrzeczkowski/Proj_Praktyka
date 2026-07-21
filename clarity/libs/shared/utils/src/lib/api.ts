@@ -1,28 +1,15 @@
 import axios from 'axios';
+import { CreateSessionPayload } from '@clarity/types';
 
-const API_URL = 'http://localhost:3333/api';
+const API_URL = process.env['VITE_API_URL'] ?? 'http://localhost:3333/api';
 
-export const saveGameSession = async (gameType: string, stats: any) => {
-  try {
-    const response = await axios.post(`${API_URL}/sessions`, {
-      gameType: gameType,
-      duration: stats.duration || 0,
-      ...stats
-    });
-    console.log('Wynik zapisany na serwerze:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Nie udało się zapisać wyniku:', error);
-    return null;
-  }
-};
+export const sessionsApi = {
+    save: (data: CreateSessionPayload) => 
+        axios.post(`${API_URL}/sessions`, data),
 
-export const fetchGameResults = async (gameType: string) => {
-    try {
-        const response = await axios.get(`${API_URL}/sessions/${gameType}`);
-        return response.data;
-    } catch (error) {
-        console.error('Błąd pobierania danych:', error);
-        return [];
-    }
+    get: (gameType: string) =>
+        axios.get(`${API_URL}/sessions/${gameType}`),
+
+    clear: (gameType: string) =>
+        axios.delete(`${API_URL}/sessions/${gameType}`),
 };

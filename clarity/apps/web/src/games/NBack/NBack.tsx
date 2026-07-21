@@ -8,7 +8,8 @@ import { NBackEnd } from './NBackEnd';
 import { DURATION_MAP } from '@clarity/utils';
 import { useSessionStore } from '@clarity/game-logic';
 import { formatTime } from '@clarity/utils';
-import { saveGameSession } from '@clarity/utils';
+import { sessionsApi } from '@clarity/utils';
+import { NBackLevel } from '@clarity/types';
 
 function NBack() {
     const game = useNBackGame();
@@ -16,15 +17,14 @@ function NBack() {
     const { addNBackResult } = useSessionStore();
 
     const [selectedDuration, setSelectedDuration] = useState("1 min");
-    const [selectedLevel, setSelectedLevel] = useState("1-Back (podstawowy)");
+    const [selectedLevel, setSelectedLevel] = useState<NBackLevel>(NBackLevel.One);
 
     const hasSaved = useRef(false);
 
     const startTimer = () => {
         hasSaved.current = false;
         const seconds = DURATION_MAP[selectedDuration] ?? 60;
-        const level = parseInt(selectedLevel.split('-')[0]);
-        game.startGame(seconds, level);
+        game.startGame(seconds, selectedLevel);
     };
 
     useEffect(() => {
@@ -32,7 +32,7 @@ function NBack() {
             hasSaved.current = true;
 
             const duration = DURATION_MAP[selectedDuration] ?? 60;
-            const level = parseInt(selectedLevel.split('-')[0]);
+            const level = selectedLevel;
 
             addNBackResult({
                 duration: duration,
@@ -44,13 +44,13 @@ function NBack() {
                 bestStreak: game.bestStreak
             });
 
-            saveGameSession('nback', {
+            sessionsApi.save({
+                gameType: 'nback',
                 duration: duration,
-                level: level,
-                correct: game.correct,
-                incorrect: game.incorrect,
+                score: game.correct,
                 efficiency: game.efficiency,
-                avgTime: game.avgTime,
+                avgReactionTime: game.avgTime,
+                nLevel: level,
                 bestStreak: game.bestStreak
             });
         }
@@ -114,8 +114,8 @@ function NBack() {
                         <NBackMenu
                             selectedDuration={selectedDuration}
                             setSelectedDuration={setSelectedDuration}
-                            selectedLevel={selectedLevel}
-                            setSelectedLevel={setSelectedLevel}
+                            level={selectedLevel}
+                            setLevel={setSelectedLevel}
                             onStart={startTimer}
                             onBack={() => navigate('/')}
                         />

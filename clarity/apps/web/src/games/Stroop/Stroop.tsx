@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useStroopGame } from '@clarity/game-logic';
 import { DURATION_MAP, formatPercent, formatTime } from '@clarity/utils';
 import { useSessionStore } from '@clarity/game-logic';
-import { saveGameSession } from '@clarity/utils';
+import { sessionsApi } from '@clarity/utils';
 
 function Stroop() {
     const [selectedDuration, setSelectedDuration] = useState("1 min");
@@ -15,34 +15,42 @@ function Stroop() {
     const game = useStroopGame();
     const { addStroopResult } = useSessionStore();
     const hasSaved = useRef(false);
+    const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
 
     useEffect(() => {
-        if (game.isGameOver && !hasSaved.current) {
-            hasSaved.current = true;
-            const duration = DURATION_MAP[selectedDuration] ?? 60;
+    if (game.isGameOver && !hasSaved.current) {
+        hasSaved.current = true;
+        setSaveStatus('saving');
+        const duration = DURATION_MAP[selectedDuration] ?? 60;
 
-            addStroopResult({
-                duration: duration,
-                score: game.score,
-                errors: game.errors,
-                efficiency: game.efficiencyValue,
-                avgReactionTime: game.avgTime,
-                interference: game.interference,
-            });
+        addStroopResult({
+            duration: duration,
+            score: game.score,
+            errors: game.errors,
+            efficiency: game.efficiencyValue,
+            avgReactionTime: game.avgTime,
+            interference: game.interference,
+        });
 
-            saveGameSession('stroop', {
-                duration: duration,
-                score: game.score,
-                errors: game.errors,
-                efficiency: game.efficiencyValue,
-                avgTime: game.avgTime,
-                interference: game.interference,
-                congruentCount: game.congruentCount,
-                incongruentCount: game.incongruentCount
-            });
-        }
-    }, [game.isGameOver]);
+        sessionsApi.save({
+            gameType: 'stroop',
+            duration: duration,
+            score: game.score,
+            errors: game.errors,
+            efficiency: game.efficiencyValue,
+            avgReactionTime: game.avgTime,
+            interference: game.interference,
+            congruentCount: game.congruentCount,
+            incongruentCount: game.incongruentCount
+        })
+        .then(() => setSaveStatus('saved'))
+        .catch((err) => {
+            console.error("Zapis nie powiódł się", err);
+            setSaveStatus('error');
+        });
+    }
+}, [game.isGameOver]);
 
     const backToMain = () => {
         hasSaved.current = false;
@@ -80,6 +88,7 @@ function Stroop() {
                             congruentCount={game.congruentCount}
                             incongruentCount={game.incongruentCount}
                             onRestart={backToMain}
+                            saveStatus={saveStatus}
                         />
                     </motion.div>
                 ) : (

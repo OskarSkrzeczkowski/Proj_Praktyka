@@ -1,25 +1,21 @@
-const { NxAppWebpackPlugin } = require('@nx/webpack/app-plugin');
-const { join } = require('path');
+const { composePlugins, withNx } = require('@nx/webpack');
 
-module.exports = {
-  output: {
-    path: join(__dirname, '../../dist/apps/api'),
-    clean: true,
-    ...(process.env.NODE_ENV !== 'production' && {
-      devtoolModuleFilenameTemplate: '[absolute-resource-path]',
-    }),
-  },
-  plugins: [
-    new NxAppWebpackPlugin({
-      target: 'node',
-      compiler: 'tsc',
-      main: './src/main.ts',
-      tsConfig: './tsconfig.app.json',
-      assets: ['./src/assets'],
-      optimization: false,
-      outputHashing: 'none',
-      generatePackageJson: true,
-      sourceMap: true,
-    }),
-  ],
-};
+module.exports = composePlugins(withNx(), (config) => {
+  const originalExternals = config.externals[0];
+
+  config.externals = [
+    function ({ context, request }, callback) {
+      if (request && request.startsWith('@clarity/')) {
+        return callback();
+      }
+      
+      if (typeof originalExternals === 'function') {
+        return originalExternals({ context, request }, callback);
+      }
+      
+      return callback();
+    },
+  ];
+
+  return config;
+});

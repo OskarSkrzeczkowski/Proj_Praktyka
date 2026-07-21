@@ -1,6 +1,6 @@
-import { formatMs } from '@clarity/utils';
 import Button from '@mui/material/Button';
-import { GameBox } from '@clarity/ui';
+import { GameBox, StatCard } from '@clarity/ui';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface EndProps {
   score: number;
@@ -11,9 +11,23 @@ interface EndProps {
   congruentCount: number;
   incongruentCount: number;
   onRestart: () => void;
+  saveStatus: 'idle' | 'saving' | 'saved' | 'error';
 }
 
-export const StroopEnd = ({ score, errors, efficiency, avgTime, interference, congruentCount, incongruentCount, onRestart }: EndProps) => {
+export const StroopEnd = ({ score, errors, efficiency, avgTime, interference, congruentCount, incongruentCount, onRestart, saveStatus }: EndProps) => {
+
+    const renderSaveStatus = () => {
+        switch (saveStatus) {
+            case 'saving':
+                return <div className="flex items-center gap-2 text-white/50"><CircularProgress size={16} color="inherit" /> Zapisywanie...</div>;
+            case 'saved':
+                return <div className="text-green-500 font-bold">✅ Wyniki zostały zapisane</div>;
+            case 'error':
+                return <div className="text-red-500 font-bold">⚠️ Wystąpił błąd podczas zapisu</div>;
+            default:
+                return null;
+        }
+    };
     
 return (
     <div className="min-h-screen w-full flex items-center justify-center p-4">
@@ -21,30 +35,37 @@ return (
         <h2 className="leading-18 text-[36px] font-bold">Gotowe</h2>
         <p className="leading-6 text-white/75">To ćwiczenie pomaga utrzymać klarowność myślenia i ogranicza poznawczy chaos na początku pracy.</p>
         <h3 className="text-xl font-bold my-6">Twoje wyniki:</h3>
-        <div className="grid grid-cols-2 gap-2 justify-items-center w-full mb-6">
-          <div className="bg-[#310606a6] border border-[#4e0101] rounded-2xl w-3xs flex flex-col justify-center items-center p-4 cursor-default">
-            <p className="text-white/75 text-sm">Poprawne</p>
-            <p className="text-3xl font-bold text-purple-400">{score}/{score + errors}</p>
-          </div>
-          
-          <div className="bg-[#310606a6] border border-[#4e0101] rounded-2xl w-3xs flex flex-col justify-center items-center p-4 cursor-default">
-            <p className="text-white/75 text-sm">Skuteczność</p>
-            <p className="text-3xl font-bold text-purple-400">{efficiency}</p>
-          </div>
-          
-          <div className="bg-[#310606a6] border border-[#4e0101] rounded-2xl w-3xs flex flex-col justify-center items-center p-4 cursor-default">
-            <p className="text-white/75 text-sm">Średni czas reakcji</p>
-            <p className="text-3xl font-bold text-purple-400">{formatMs(avgTime)}</p>
-          </div>
-          
-          <div className="bg-[#310606a6] border border-[#4e0101] rounded-2xl w-3xs flex flex-col justify-center items-center p-4 cursor-default">
-            <p className="text-white/75 text-sm">Efekt interferencji</p>
-            <p className="text-3xl font-bold text-purple-400">
-                {congruentCount > 0 && incongruentCount > 0
-                    ? formatMs(interference)
-                    : "0"}</p>
-          </div>
-        </div>
+        <div className="grid grid-cols-2 gap-4 justify-items-center w-full max-w-2xl mx-auto mb-6">
+  <StatCard 
+    label="Poprawne" 
+    valueText={`${score}/${score + errors}`} 
+    color="#c084fc" 
+    className="bg-[#310606a6] border-[#4e0101] w-full"
+  />
+  
+  <StatCard 
+    label="Skuteczność" 
+    valueText={efficiency} 
+    color="#c084fc" 
+    className="bg-[#310606a6] border-[#4e0101] w-full"
+  />
+  
+  <StatCard 
+    label="Średni czas reakcji" 
+    value={avgTime} 
+    unit="ms" 
+    color="#c084fc" 
+    className="bg-[#310606a6] border-[#4e0101] w-full"
+  />
+  
+  <StatCard 
+    label="Efekt interferencji" 
+    value={congruentCount > 0 && incongruentCount > 0 ? interference : 0} 
+    unit="ms" 
+    color="#c084fc" 
+    className="bg-[#310606a6] border-[#4e0101] w-full"
+  />
+</div>
         <div className="mb-8">
         <h3 className="text-xl font-bold">Na co to się przekłada?</h3>
         <ul className="list-disc px-6">
@@ -54,6 +75,7 @@ return (
             <li className="text-white/75">lepsza jakość pierwszych decyzji w ciągu dnia</li>
         </ul>
         </div>
+        <div className="mb-6">{renderSaveStatus()}</div>
         <Button 
             variant="contained" 
             color="primary" 

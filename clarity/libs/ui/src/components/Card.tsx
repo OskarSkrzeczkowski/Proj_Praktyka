@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+import MuiCard from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     ses: string;
@@ -11,24 +13,36 @@ interface Props {
     borderCol: string;
 }
 
-export const Card = ({ses, name, aname, desc, img, imgAlt, path, borderCol}: Props) => {
+export const Card = ({ path, ses, name, aname, desc, img, imgAlt, borderCol }: Props) => {
+    const navigate = useNavigate();
     
     return(
-        <Link to = {path}>
-        <div className="pb-2">
-            <div className="flex items-center gap-30 pb-2.5">
-                <img className="h-12 w-12" src={img} alt={imgAlt}></img>
-                <div className={`flex justify-center items-center border-2 rounded-[10px] border-solid min-w-18 px-1 py-px h-8 ${borderCol}`}>
-                    <p className="font-medium">{ses}</p>
+        <MuiCard 
+            sx={{ 
+                backgroundColor: 'transparent',
+                backgroundImage: 'none',
+                boxShadow: 'none',
+                borderRadius: '15px',
+                height: '100%'
+            }}
+        >
+            <CardActionArea onClick={() => navigate(path)} sx={{ height: '100%' }}>
+                
+                <div className="p-5">
+                    <div className="flex items-center justify-between pb-2.5">
+                        <img className="h-12 w-12" src={img} alt={imgAlt} />
+                        <div className={`flex justify-center items-center border-2 rounded-[10px] border-solid min-w-18 px-1 py-px h-8 ${borderCol}`}>
+                            <p className="font-medium text-white">{ses}</p>
+                        </div>
+                    </div>
+                    <div className='card-1'>
+                        <h2 className='font-sans text-white text-2xl pb-2'>{name}</h2>
+                        <p className='font-sans text-xl text-white/90 pb-2'>{aname}</p>
+                        <p className='font-sans text-white/75'>{desc}</p>
+                    </div>
                 </div>
-            </div>
-            <div className='card-1'>
-                <h2 className='font-sans text-white text-2xl pb-2'>{name}</h2>
-                <p className='font-sans text-xl text-white/90 pb-2'>{aname}</p>
-                <p className='font-sans text-white/75'>{desc}</p>
-            </div>
-        </div>
-        </Link>
-
+                
+            </CardActionArea>
+        </MuiCard>
     );
 }

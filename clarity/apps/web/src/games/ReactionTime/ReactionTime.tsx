@@ -6,7 +6,7 @@ import { ReactionEnd } from './ReactionTimeEnd';
 import { ReactionMenu } from './ReactionTimeMenu';
 import { useReactionTime, useSessionStore } from '@clarity/game-logic';
 import { DURATION_MAP, formatTime, formatMs } from '@clarity/utils';
-import { saveGameSession } from '@clarity/utils';
+import { sessionsApi } from '@clarity/utils';
 
 function Reaction() {
     const game = useReactionTime();
@@ -28,12 +28,13 @@ function Reaction() {
                 bestReactionTime: game.bestTime
             });
 
-            saveGameSession('reaction', {
+            sessionsApi.save({
+                gameType: 'reaction',
                 duration: duration,
-                trials: game.trials,
+                attempts: game.trials,
                 misses: game.misses,
-                avgTime: game.avgTime,
-                bestTime: game.bestTime
+                avgReactionTime: game.avgTime,
+                bestReactionTime: game.bestTime
             });
         }
     }, [game.isGameOver, game, selectedDuration, addReactionResult]);

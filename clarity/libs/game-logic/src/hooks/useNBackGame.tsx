@@ -1,10 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { GamePhase } from '@clarity/types';
 
-type GamePhase = 'IDLE' | 'PLAYING' | 'GAMEOVER';
-const SYMBOLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+const SYMBOLS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] as const;
+
+export const FEEDBACK = {
+    Correct: 'Dobrze!',
+    Wrong: 'Błąd!',
+    TooEarly: 'Za wcześnie!',
+} as const;
 
 export function useNBackGame() {
-    const [phase, setPhase] = useState<GamePhase>('IDLE');
+    const [phase, setPhase] = useState<GamePhase>(GamePhase.Idle);
     const [timeLeft, setTimeLeft] = useState(60);
     const [totalTime, setTotalTime] = useState(60);
     const [history, setHistory] = useState<string[]>([]);
@@ -54,7 +60,7 @@ export function useNBackGame() {
 
     useEffect(() => {
         let timer: number;
-        if (phase === 'PLAYING' && startTime) {
+        if (phase === GamePhase.Playing && startTime) {
         timer = window.setInterval(() => {
             const now = Date.now();
             const elapsedSeconds = (now - startTime) / 1000;
@@ -62,7 +68,7 @@ export function useNBackGame() {
 
             if (remaining <= 0) {
                 setTimeLeft(0);
-                setPhase('GAMEOVER');
+                setPhase(GamePhase.GameOver);
                 clearInterval(timer);
             } else {
                 setTimeLeft(remaining);
@@ -72,7 +78,7 @@ export function useNBackGame() {
         return () => clearInterval(timer);
     }, [phase, startTime, totalTime]);
 
-    const startGame = (seconds: number, level: number) => {
+    const startGame = useCallback((seconds: number, level: number) => {
         const now = Date.now();
         const startChar = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
         setStartTime(now);
@@ -83,25 +89,26 @@ export function useNBackGame() {
         setIncorrect(0);
         setStreak(0);
         setHistory([startChar]);
-        setPhase('PLAYING');
+        setPhase(GamePhase.Playing);
         setReactionTimes([]);
         setBestStreak(0);
         setIsProcessing(false);
         setCurrentSymbol(startChar);
-    };
+    }, []);
 
     useEffect(() => {
-        if (phase !== 'PLAYING' || isProcessing) return;
+        if (phase !== GamePhase.Playing || isProcessing) return;
         if (history.length <= nLevel) {
             const timer = setTimeout(() => {
                 nextStep();
             }, 1200);
         return () => clearTimeout(timer);
         }
+        return undefined;
     }, [history.length, phase, nLevel, nextStep, isProcessing]);
 
     const handleAnswer = useCallback((userClaimedMatch: boolean) => {
-        if (phase !== 'PLAYING' || !canAnswer || isProcessing) return;
+        if (phase !== GamePhase.Playing || !canAnswer || isProcessing) return;
 
         setIsProcessing(true);
 
@@ -131,7 +138,7 @@ export function useNBackGame() {
     }, [phase, canAnswer, isProcessing, lastStepTimestamp, currentSymbol, history, nLevel, nextStep]);
 
     useEffect(() => {
-        if (phase !== 'PLAYING') return;
+        if (phase !== GamePhase.Playing) return;
 
         const handleKey = (e: KeyboardEvent) => {
             const key = e.key.toLowerCase();
@@ -150,8 +157,8 @@ export function useNBackGame() {
     }, [phase, handleAnswer]);
     
     return {
-        isGameActive: phase === 'PLAYING',
-        isGameOver: phase === 'GAMEOVER',
+        isGameActive: phase === GamePhase.Playing,
+        isGameOver: phase === GamePhase.GameOver,
         timeLeft,
         totalTime,
         currentSymbol,
@@ -166,6 +173,6 @@ export function useNBackGame() {
         stepIndex,
         handleAnswer,
         startGame,
-        exitGame: () => setPhase('IDLE')
+        exitGame: () => setPhase(GamePhase.Idle)
     };
 }

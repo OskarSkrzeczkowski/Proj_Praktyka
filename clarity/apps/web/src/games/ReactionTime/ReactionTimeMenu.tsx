@@ -1,6 +1,7 @@
 import { TimeList } from '@clarity/ui';
 import Button from '@mui/material/Button';
 import { GameBox } from '@clarity/ui';
+import { BackButton } from '@clarity/ui';
 
 interface MenuProps {
   selectedDuration: string;
@@ -12,28 +13,21 @@ interface MenuProps {
 export const ReactionMenu = ({selectedDuration, setSelectedDuration, onStart, onBack}: MenuProps) => {
     return(
         <div className="min-h-screen w-full flex items-center justify-center p-4">
-            <GameBox gameVariant="reaction" sx={{ p: '32px', m: 0, lineHeight: '40px', color: 'white' }}>
+            <GameBox 
+                gameVariant="reaction"
+                sx={{ 
+                    p: '32px', 
+                    m: 0,   
+                    lineHeight: '40px', 
+                    color: 'white',
+                    width: '100%',
+                    maxWidth: '768px'
+                }}
+            >
                 <div>
-                    <div className="flex gap-100">
+                    <div className="flex justify-between items-center mb-4">
                     <h2 className="text-[36px] font-bold">Czujność</h2>
-                    <Button 
-                        variant="outlined" 
-                        color="inherit" 
-                        onClick={onBack}
-                        sx={{
-                            borderRadius: '8px',
-                            borderWidth: '2px',
-                            textTransform: 'none',
-                            fontWeight: 'medium',
-                            minWidth: '80px',
-                            '&:hover': {
-                                borderWidth: '2px',
-                                transform: 'scale(1.05)'
-                            }
-                        }}
-                    >
-                        Wróć
-                    </Button>
+                    <BackButton onClick={onBack} />
 
                     </div>
                     <p className="text-white/75">Kalibruje czuwanie – szybsze "obudzenie" uwagi.</p>

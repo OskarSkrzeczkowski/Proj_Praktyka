@@ -9,17 +9,14 @@ import Stats from './stats/Stats'
 import { useSessionStore } from '@clarity/game-logic';
 import { Particles } from './Particles';
 
-
 function Home() {
       const location = useLocation(); 
       const { stroopHistory, reactionHistory, nbackHistory } = useSessionStore();
-
 
       const stroopSessions = stroopHistory.length;
       const reactionSessions = reactionHistory.length;
       const nbackSessions = nbackHistory.length;
       
-
       return(
         <div className="relative min-h-screen w-full">
             <Particles />
@@ -35,10 +32,11 @@ function Home() {
                 <header className="flex flex-col items-center justify-center max-w-[100vw] text-center m-10 text-white/80">
                   <h1 className="text-[45px] font-extrabold m-1.5">Rozgrzewka poznawcza</h1>
                   <p className ="text-[20px] font-semibold m-1.5">5 minut, które porządkują uwagę zanim zaczniesz właściwą pracę.</p>
-                  <p className ="text-[16px] w-[50vw] m-1.5">Ta aplikacja nie trenuje mózgu i nie testuje inteligencji. Jej celem jest szybkie ustawienie stanu poznawczego: uwagi, czujności i ciągłości myślenia – tak, abyś mógł wejść w pracę bez zbędnego rozruchu.</p>
+                  <p className ="text-[16px] w-[95%] md:w-[70%] lg:w-[50%]] m-1.5">Ta aplikacja nie trenuje mózgu i nie testuje inteligencji. Jej celem jest szybkie ustawienie stanu poznawczego: uwagi, czujności i ciągłości myślenia – tak, abyś mógł wejść w pracę bez zbędnego rozruchu.</p>
                 </header>
                 <div className="flex flex-wrap justify-center gap-8 text-white">
-                  <div className="redR rounded-[15px] p-5 m-2.5 text-left max-w-75 inline-block transition-transform duration-300 ease-in-out hover:scale-105 text-red-700/60">
+                  
+                  <div className="redR rounded-[15px] flex flex-col m-2.5 text-left max-w-75 transition-transform duration-300 ease-in-out hover:scale-105 hover:brightness-110 cursor-pointer text-red-700/60">
                     <Card  
                       path="/Stroop" 
                       img={PhotoOne} 
@@ -50,7 +48,8 @@ function Home() {
                       borderCol={"border-red-950/70 border-2 text-red-200/80 bg-red-400/40"}
                     />
                   </div>
-                  <div className="blueR rounded-[15px] p-5 m-2.5 text-left max-w-75 inline-block transition-transform duration-300 ease-in-out hover:scale-105">
+                  
+                  <div className="blueR rounded-[15px] flex flex-col m-2.5 text-left max-w-75 transition-transform duration-300 ease-in-out hover:scale-105 hover:brightness-110 cursor-pointer">
                     <Card 
                       path="/Reaction" 
                       img={PhotoTwo} 
@@ -62,7 +61,8 @@ function Home() {
                       borderCol={"border-blue-950 border-2 text-blue-200/80 bg-blue-500/50"}
                     />
                   </div>
-                  <div className="greenR rounded-[15px] p-5 m-2.5 text-left max-w-75 inline-block transition-transform duration-300 ease-in-out hover:scale-105 text-green-800/80">
+                  
+                  <div className="greenR rounded-[15px] flex flex-col m-2.5 text-left max-w-75 transition-transform duration-300 ease-in-out hover:scale-105 hover:brightness-110 cursor-pointer text-green-800/80">
                     <Card 
                       path="/NBack" 
                       img={PhotoThree} 
@@ -74,6 +74,7 @@ function Home() {
                       borderCol={"border-green-950/80 border-2 text-green-200/80 bg-green-500/50"}
                     />
                   </div>
+
                 </div>
                 <div className="py-4">
                     <Link to="/Stats" className="text-white border-2 rounded-lg p-2 bg-white/20">Statystyki</Link>
@@ -91,6 +92,6 @@ function Home() {
         </AnimatePresence>
         </div>
       );
-    };
+};
 
 export default Home;

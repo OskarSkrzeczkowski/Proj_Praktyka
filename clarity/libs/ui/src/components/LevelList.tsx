@@ -1,10 +1,11 @@
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { toggleGroupSx } from '../lib/toggleStyles';
+import { NBackLevel } from '@clarity/types';
 
 interface LevelListProps {
-  onLevelChange: (level: string) => void;
-  currentLevel: string;
+  onLevelChange: (level: NBackLevel) => void;
+  currentLevel: NBackLevel;
 }
 
 export const LevelList = ({ onLevelChange, currentLevel }: LevelListProps) => {

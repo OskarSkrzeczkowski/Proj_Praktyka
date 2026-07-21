@@ -54,3 +54,9 @@ storybook-static
 .nx/polygraph
 .nx/self-healing
 .nx/migrate-runs
+
+.env
+
+#log
+*.log
+debug-storybook.log

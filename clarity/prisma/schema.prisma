@@ -6,18 +6,30 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+}
+
 model Session {
-  id              String   @id @default(uuid())
-  gameType        String
-  score           Int?
-  errors          Int?
-  efficiency      Float?
-  avgReactionTime Int?
-  interference    Int?
-  nLevel          Int?
-  bestStreak      Int?
-  misses          Int?
+  id               String   @id @default(uuid())
+  
+  userId           String?   
+  user             User?     @relation(fields: [userId], references: [id])
+
+  gameType         String
+  score            Int?
+  errors           Int?
+  efficiency       Float?
+  avgReactionTime  Int?
+  interference     Int?
+  nLevel           Int?
+  bestStreak       Int?
+  misses           Int?
   bestReactionTime Int?
-  duration        Int
-  createdAt       DateTime @default(now())
+  duration         Int
+  createdAt        DateTime @default(now())
 }

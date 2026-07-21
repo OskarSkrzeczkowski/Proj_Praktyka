@@ -3,10 +3,23 @@ import Button from '@mui/material/Button';
 interface GameButtonProps {
   label: string;
   onClick: () => void;
-  variant: 'yes' | 'no';
+  variant: 'yes' | 'no' | 'color'; 
+  colorClass?: string;             
 }
 
-export const GameButton = ({ label, onClick, variant }: GameButtonProps) => {
+export const GameButton = ({ label, onClick, variant, colorClass = '' }: GameButtonProps) => {
+  
+  if (variant === 'color') {
+    return (
+      <button
+        onClick={onClick}
+        className={`h-24 rounded-2xl text-[20px] w-64 font-bold transition-all duration-300 hover:scale-105 cursor-pointer text-white border-none ${colorClass}`}
+      >
+        {label}
+      </button>
+    );
+  }
+
   const isYes = variant === 'yes';
   const bgColor = isYes ? '#169135a8' : 'rgba(127, 29, 29, 0.4)';
   const hoverBg = isYes ? '#189738' : 'rgba(127, 29, 29, 0.6)';
@@ -26,6 +39,7 @@ export const GameButton = ({ label, onClick, variant }: GameButtonProps) => {
         fontWeight: 'bold',
         fontSize: '1.25rem',
         color: 'white',
+        textTransform: 'none',
         transition: 'all 0.2s ease',
         '&:hover': {
           backgroundColor: hoverBg,

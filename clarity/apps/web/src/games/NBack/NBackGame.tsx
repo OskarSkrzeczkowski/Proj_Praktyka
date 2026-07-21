@@ -1,6 +1,7 @@
-import { TimeBar } from '@clarity/ui';
+import { GameHeader, TimeBar } from '@clarity/ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GameButton } from '@clarity/ui';
+import { FEEDBACK } from '@clarity/game-logic';
 
 interface GameProps {
   totalTime: number;
@@ -23,14 +24,7 @@ export const NBackGame = ({ totalTime, formattedTime, correct, incorrect,
     return (
     <div className="fixed inset-0 flex flex-col justify-center p-6 text-white bg-[#033f1a]/20">
       
-      <div className="absolute top-0 left-0 right-0 w-full border-b border-white/20">
-        <div className="mx-auto flex justify-center h-16 gap-x-64 items-center py-4 px-8">
-          <button aria-label="Wróć do menu" onClick={onExit} className="hover:bg-white/10 p-2 rounded-xl transition-colors cursor-pointer">
-            <span>&larr; Wróć</span>
-          </button>
-          <div>Pozostało: <span>{formattedTime}</span></div>
-        </div>
-      </div>
+    <GameHeader formattedTime={formattedTime} onExit={onExit} />
 
       <TimeBar totalTime={totalTime} />
 
@@ -54,15 +48,15 @@ export const NBackGame = ({ totalTime, formattedTime, correct, incorrect,
                 className="flex justify-center pointer-events-none"
               >
                 <div className={`px-10 py-4 rounded-3xl border-4 font-black text-3xl shadow-xl
-                  ${feedback === "Dobrze!" 
-                    ? "bg-green-600 border-green-400 text-white" 
-                    : feedback === "Błąd!"
-                    ? "bg-red-600 border-red-400 text-white"
-                    : "bg-yellow-400 border-yellow-600 text-white"
-                  }`}
+                     ${feedback === FEEDBACK.Correct 
+                        ? "bg-green-600 border-green-400 text-white" 
+                        : feedback === FEEDBACK.Wrong
+                        ? "bg-red-600 border-red-400 text-white"
+                        : "bg-yellow-400 border-yellow-600 text-white"
+                    }`}
                 >
-                  {feedback}
-                </div>
+                {feedback}
+            </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -75,7 +69,7 @@ export const NBackGame = ({ totalTime, formattedTime, correct, incorrect,
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 1.5, opacity: 0 }}
-              className="text-[140px] font-black tracking-tighter leading-none"
+              className="text-[80px] md:text-[140px] font-black tracking-tighter leading-none"
             >
               {currentSymbol}
             </motion.h1>

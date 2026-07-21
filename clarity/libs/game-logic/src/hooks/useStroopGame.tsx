@@ -11,7 +11,7 @@ const COLORS: ColorOption[] = [
   { name: 'NIEBIESKI', colorClass: 'text-blue-500', btnClass: 'bg-blue-900 border-blue-500' },
   { name: 'ZIELONY', colorClass: 'text-green-500', btnClass: 'bg-green-900 border-green-500' },
   { name: 'ŻÓŁTY', colorClass: 'text-yellow-400', btnClass: 'bg-yellow-900 border-yellow-500' },
-];
+] as const;
  
 type GamePhase = 'IDLE' | 'PLAYING' | 'GAMEOVER';
 

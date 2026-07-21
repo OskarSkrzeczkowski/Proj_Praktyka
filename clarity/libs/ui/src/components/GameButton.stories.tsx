@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { GameButton } from './GameButtonTF';
+import { GameButton } from './GameButton';
 
 const meta: Meta<typeof GameButton> = {
     title: 'Gra/GameButton',

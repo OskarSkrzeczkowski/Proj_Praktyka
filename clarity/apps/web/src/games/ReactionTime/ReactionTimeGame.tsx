@@ -1,5 +1,5 @@
 import {motion, AnimatePresence} from 'framer-motion';
-import { TimeBar } from '@clarity/ui';
+import { GameHeader, TimeBar } from '@clarity/ui';
 
 interface GameProps {
   totalTime: number;
@@ -23,21 +23,13 @@ export const ReactionTimeGame = ({ totalTime, formattedTime, score, avgTime, los
     const opacityClasses = ["text-white", "text-white/70", "text-white/50", "text-white/30",]
 
     return (
-    <div className="fixed inset-0 flex flex-col justify-center p-6 text-white">
-      <div className="absolute top-0 left-0 right-0 w-full border-b border-white">
-        <div className="mx-auto flex justify-center h-16 gap-x-64 items-center py-4 px-8">
-          <button aria-label="Wróć do menu" onClick={onExit} className="hover:bg-gray-500 rounded-xl w-24 flex justify-center cursor-pointer">
-            <span>&larr; Wróć</span>
-          </button>
-          <div>Pozostało: <span>{formattedTime}</span></div>
-        </div>
-      </div>
+    <div className="fixed inset-0 flex flex-col justify-center p-6 text-white bg-[#4e0101]/20">
+        <GameHeader formattedTime={formattedTime} onExit={onExit} />
 
         <TimeBar totalTime={totalTime} />
 
       <div className="flex flex-col items-center justify-center w-full flex-1">
         
-        {/* 1. STATYSTYKI: Bez żadnego mt-64, po prostu leżą na samej górze "wyspy" */}
         <div className="flex gap-8 text-lg">
           <span>Próby: <span className="text-green-400 font-bold">{score}</span></span>
           <span>Średni czas reakcji: <span className="text-red-400 font-bold">{avgTime}</span></span>

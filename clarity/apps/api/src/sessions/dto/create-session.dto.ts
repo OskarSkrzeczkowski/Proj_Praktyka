@@ -1,9 +1,12 @@
-import { IsString, IsNumber, IsOptional, IsIn } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
+import type { CreateSessionPayload } from '@clarity/types';
+import { IsEnum } from 'class-validator';
+import { GameType } from '@clarity/types';
 
-export class CreateSessionDto {
+export class CreateSessionDto implements CreateSessionPayload {
     @IsString()
-    @IsIn(['stroop', 'reaction', 'nback'])
-    gameType!: string;
+    @IsEnum(GameType)
+    gameType!: GameType;
 
     @IsNumber()
     duration!: number;
